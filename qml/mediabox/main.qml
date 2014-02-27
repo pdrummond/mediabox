@@ -15,12 +15,12 @@ Rectangle {
             height:parent.height;
             anchors.fill:parent;
 
-                Text {
-                    text: "Loading..."
-                    font.pointSize: 10
-                    anchors.centerIn: parent;
-                    opacity: model.count == 0?1:0; //Hide loading when model is loaded.
-                }
+            Text {
+                text: "Loading..."
+                font.pointSize: 10
+                anchors.centerIn: parent;
+                opacity: model.count == 0?1:0; //Hide loading when model is loaded.
+            }
 
 
             ListView {
@@ -29,7 +29,8 @@ Rectangle {
                 anchors.margins: 5;
                 spacing:30;
                 model: model
-                cacheBuffer: 1280
+                maximumFlickVelocity: 6000 //Flick speed on Android is slow without this
+                cacheBuffer: 10000
                 smooth: true
                 clip:true;
                 add: Transition { //scale in animation whenever an item is added to list
