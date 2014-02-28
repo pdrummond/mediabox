@@ -14,6 +14,7 @@ function downloadMovies() {
                     movie.genreNames = genres(movie.genres);
                     model.append(movie);
                 }
+                main.state = "MOVIES";
             }
         }
     }

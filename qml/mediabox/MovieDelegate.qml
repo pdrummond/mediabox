@@ -79,4 +79,13 @@ Rectangle {
             }
         }
     }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            var mediaId = id
+            console.log("Media delegate clicked: " + mediaId)
+            main.state = "MOVIE"
+        }
+    }
 }
