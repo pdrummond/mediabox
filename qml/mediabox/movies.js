@@ -11,6 +11,7 @@ function downloadMovies() {
                 var json = JSON.parse(movieReq.responseText);
                 for(var i=0; i<json.entries.length; i++) {
                     var movie = json.entries[i].movie;
+                    movie.genreNames = genres(movie.genres);
                     model.append(movie);
                 }
             }
@@ -26,4 +27,15 @@ function downloadMovies() {
 function cancelDownloadMovie() {
     movieReq.abort();
     console.log("REQUEST ABORTED");
+}
+
+function genres(genres) {
+    var result = '';
+    for (var i = 0; i < genres.length; i++) {
+        if (result.length > 0) {
+            result += ', ';
+        }
+        result += genres[i].name;
+    }
+    return result;
 }
