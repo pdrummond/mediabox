@@ -45,6 +45,8 @@ Rectangle {
         Text {
             id   : mediaTitle
             text : title + ' (' + release_date.substring(0,4) + ')'
+            width: parent.width
+            elide: Text.ElideRight
             font {
                 pointSize: 16
                 bold     : true
@@ -56,20 +58,21 @@ Rectangle {
                 top: mediaTitle.bottom;
             }
             text    : overview;
+            elide   : Text.ElideRight
             wrapMode: Text.Wrap
             width   : parent.width
             height  : parent.height - (mediaTitle.height + bottomText.height + 16)
-            clip    : true
             font.pointSize: 14
         }
 
         Text {
             id   : bottomText
             width: parent.width
+            text : genreNames
+            elide: Text.ElideRight
             anchors {
                 bottom: parent.bottom
             }
-            text: genreNames
             font {
                 pointSize: 14
                 italic   : true
