@@ -6,8 +6,8 @@ Rectangle {
 
     id: main
 
-    width: 640
-    height: 800
+    width: 1080
+    height: 900
 
     state: "LOADING"
 
