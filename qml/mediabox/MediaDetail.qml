@@ -1,16 +1,30 @@
 import QtQuick 2.0
 
+import "movies.js" as Movies;
+
 Rectangle {
 
     property string baseUrl: "http://image.tmdb.org/t/p/"
 
-    signal itemClicked(int mediaId)
+    width: parent.width
+    height: 62
+
+    focus: true
+
+    anchors.fill: parent
 
     radius: 10
-    width : parent.width
-    height: 530
     color : "#d9d9cf"
 
+    Connections {
+        target: moviesListView
+        onMediaSelected: {
+            console.log("DETAIL VIEW CLICKED " + mediaId)
+            Movies.getMovie(mediaId)
+        }
+    }
+
+/*
     Image {
         id    : movieImage
         x     : 10
@@ -21,16 +35,6 @@ Rectangle {
             margins: 10
             top    : parent.top
         }
-
-        /*
-            The following provides image fading.
-
-            Whenever the source is changed, set the opacity to 0.
-
-            Whenever the opacity changes, kick off animation to gradually increase opacity to 1 (fade in).
-        */
-        onSourceChanged: { opacity = 0;}
-        NumberAnimation on opacity { to: 1;duration: 2000}
     }
 
     Item {
@@ -81,17 +85,21 @@ Rectangle {
             }
         }
     }
+*/
+    Component.onCompleted: {
 
-//    SoundEffect {
-//        id: playSound
-//        source: "soundeffect.wav"
-//    }
+    }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-//            playSound.play()
-            itemClicked(id)
+    Keys.onPressed: {
+        if (visible) {
+            if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
+                main.state = 'MOVIES'
+                event.accepted = true
+            }
         }
+    }
+
+    function setMovie(movie) {
+        console.log("DETAIL VIEW SET MOVIE " + movie.title + " " + movie.overview);
     }
 }
