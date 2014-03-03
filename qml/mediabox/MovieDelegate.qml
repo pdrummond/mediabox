@@ -4,6 +4,8 @@ Rectangle {
 
     property string baseUrl: "http://image.tmdb.org/t/p/"
 
+    signal itemClicked(int mediaId)
+
     radius: 10
     width : parent.width
     height: 530
@@ -80,12 +82,16 @@ Rectangle {
         }
     }
 
+//    SoundEffect {
+//        id: playSound
+//        source: "soundeffect.wav"
+//    }
+
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            var mediaId = id
-            console.log("Media delegate clicked: " + mediaId)
-            main.state = "MOVIE"
+//            playSound.play()
+            itemClicked(id)
         }
     }
 }

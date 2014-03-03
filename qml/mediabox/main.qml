@@ -1,4 +1,5 @@
 import QtQuick 2.1
+
 import "movies.js" as Movies;
 
 Rectangle {
@@ -13,18 +14,18 @@ Rectangle {
     states: [
         State {
             name: "LOADING"
-            PropertyChanges { target: loading;     visible: true  }
+            PropertyChanges { target: loadingView;     visible: true  }
         },
         State {
             name: "MOVIES"
-            PropertyChanges { target: loading;     visible: false }
-            PropertyChanges { target: movieDetail; visible: false }
-            PropertyChanges { target: moviesList;  visible: true  }
+            PropertyChanges { target: loadingView;     visible: false }
+            PropertyChanges { target: movieDetailView; visible: false }
+            PropertyChanges { target: moviesListView;  visible: true  }
         },
         State {
             name: "MOVIE"
-            PropertyChanges { target: moviesList;  visible: false }
-            PropertyChanges { target: movieDetail; visible: true  }
+            PropertyChanges { target: moviesListView;  visible: false }
+            PropertyChanges { target: movieDetailView; visible: true  }
         }
     ]
 
@@ -38,7 +39,7 @@ Rectangle {
             anchors.fill:parent
 
             Text {
-                id: loading
+                id: loadingView
                 visible: false
                 text: "Loading..."
                 font.pointSize: 18
@@ -46,36 +47,45 @@ Rectangle {
             }
 
             MediaDetail {
-                id: movieDetail
+                id: movieDetailView
                 visible: false
             }
 
             ListView {
-                id: moviesList
+
+                signal mediaSelected(int mediaId)
+
+                id: moviesListView
                 visible: false
                 anchors.fill: parent
                 anchors.margins: 5
                 spacing:30
 //                highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
-                model: model
+                model: moviesModel
                 maximumFlickVelocity: 6000 //Flick speed on Android is slow without this
                 cacheBuffer: 10000
                 smooth: true
-//                clip:true
-//                add: Transition { //scale in animation whenever an item is added to list
-//                    NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
-//                    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
-//                }
-                delegate: MovieDelegate {}
+                add: Transition { //scale in animation whenever an item is added to list
+                    NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
+                    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
+                }
+
+                delegate: MovieDelegate {
+                    id: movieDelegate
+                    onItemClicked: {
+                        main.state = 'MOVIE'
+                        moviesListView.mediaSelected(mediaId)
+                    }
+                }
             }
         }
 
         ListModel {
-            id: model
+            id: moviesModel
         }
 
         Component.onCompleted: {
-            Movies.downloadMovies()
+            Movies.getMovies()
         }
     }
 }
