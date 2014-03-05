@@ -21,11 +21,19 @@ Rectangle {
             PropertyChanges { target: loadingView;     visible: false }
             PropertyChanges { target: movieDetailView; visible: false }
             PropertyChanges { target: moviesListView;  visible: true  }
+            PropertyChanges { target: moviesListView;  focus  : true  }
         },
         State {
             name: "MOVIE"
             PropertyChanges { target: moviesListView;  visible: false }
             PropertyChanges { target: movieDetailView; visible: true  }
+            PropertyChanges { target: movieDetailView; focus  : true  }
+        },
+        State {
+            name: "MEDIA_PLAYER"
+            PropertyChanges { target: movieDetailView; visible: false }
+            PropertyChanges { target: mediaPlayerView; visible: true  }
+            PropertyChanges { target: mediaPlayerView; focus  : true  }
         }
     ]
 
@@ -76,7 +84,16 @@ Rectangle {
                         main.state = 'MOVIE'
                         moviesListView.mediaSelected(mediaId)
                     }
+                    onItemHeld: {
+                        main.state = 'MEDIA_PLAYER'
+                        Movies.putMedia(0, mediaId)
+                    }
                 }
+            }
+
+            MediaPlayerView {
+                id: mediaPlayerView
+                visible: false
             }
         }
 
