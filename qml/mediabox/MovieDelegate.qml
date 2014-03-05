@@ -1,10 +1,13 @@
 import QtQuick 2.0
 
+import QtMultimedia 5.0
+
 Rectangle {
 
     property string baseUrl: "http://image.tmdb.org/t/p/"
 
     signal itemClicked(int mediaId)
+    signal itemHeld(int mediaId)
 
     radius: 10
     width : parent.width
@@ -21,6 +24,10 @@ Rectangle {
             margins: 10
             top    : parent.top
         }
+        smooth: true
+        cache: true
+
+//        asynchronous: true
 
         /*
             The following provides image fading.
@@ -82,16 +89,13 @@ Rectangle {
         }
     }
 
-//    SoundEffect {
-//        id: playSound
-//        source: "soundeffect.wav"
-//    }
-
     MouseArea {
         anchors.fill: parent
         onClicked: {
-//            playSound.play()
             itemClicked(id)
+        }
+        onPressAndHold: {
+            itemHeld(id)
         }
     }
 }
