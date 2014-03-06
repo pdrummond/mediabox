@@ -259,7 +259,7 @@ Rectangle {
         mediaId = movie.id;
         // FIXME needs to hide/show/animate or whatever nicely - right now it displays old details before new loads
         // 300, 780, 1280
-        backdropImage.source = baseUrl + "w1280/" + movie.backdrop_path
+        backdropImage.source = baseUrl + "w1280" + movie.backdrop_path
         titleLabel.text = movie.title + ' (' + movie.release_date.substring(0,4) + ')'
         overviewLabel.text = movie.overview;
         genresLabel.text = movie.genreNames;
