@@ -11,6 +11,9 @@ Rectangle {
 
     state: "LOADING"
 
+    property variant currentMovie
+
+    // FIXME probably a viewstack would be better than this
     states: [
         State {
             name: "LOADING"
@@ -20,20 +23,42 @@ Rectangle {
             name: "MOVIES"
             PropertyChanges { target: loadingView;     visible: false }
             PropertyChanges { target: movieDetailView; visible: false }
-            PropertyChanges { target: moviesListView;  visible: true  }
-            PropertyChanges { target: moviesListView;  focus  : true  }
+            PropertyChanges { target: movieCastView;   visible: false }
+            PropertyChanges { target: movieCrewView;   visible: false }
+            PropertyChanges { target: mediaPlayerView; visible: false }
+            PropertyChanges { target: moviesListView;  visible: true; focus: true }
         },
         State {
             name: "MOVIE"
+            PropertyChanges { target: movieDetailView; visible: false }
+            PropertyChanges { target: movieCastView;   visible: false }
+            PropertyChanges { target: movieCrewView;   visible: false }
+            PropertyChanges { target: mediaPlayerView; visible: false }
+            PropertyChanges { target: movieDetailView; visible: true; focus: true }
+        },
+        State {
+            name: "CAST"
             PropertyChanges { target: moviesListView;  visible: false }
-            PropertyChanges { target: movieDetailView; visible: true  }
-            PropertyChanges { target: movieDetailView; focus  : true  }
+            PropertyChanges { target: movieDetailView; visible: false }
+            PropertyChanges { target: movieCrewView;   visible: false }
+            PropertyChanges { target: mediaPlayerView; visible: false }
+            PropertyChanges { target: movieCastView;   visible: true; focus: true }
+        },
+        State {
+            name: "CREW"
+            PropertyChanges { target: moviesListView;  visible: false }
+            PropertyChanges { target: movieDetailView; visible: false }
+            PropertyChanges { target: movieCastView;   visible: false }
+            PropertyChanges { target: mediaPlayerView; visible: false }
+            PropertyChanges { target: movieCrewView;   visible: true; focus: true }
         },
         State {
             name: "MEDIA_PLAYER"
+            PropertyChanges { target: moviesListView;  visible: false }
             PropertyChanges { target: movieDetailView; visible: false }
-            PropertyChanges { target: mediaPlayerView; visible: true  }
-            PropertyChanges { target: mediaPlayerView; focus  : true  }
+            PropertyChanges { target: movieCastView;   visible: false }
+            PropertyChanges { target: movieCrewView;   visible: false }
+            PropertyChanges { target: mediaPlayerView; visible: true; focus: true }
         }
     ]
 
@@ -81,12 +106,39 @@ Rectangle {
                 delegate: MovieDelegate {
                     id: movieDelegate
                     onItemClicked: {
+                        // FIXME experimenting with the best way to do this...
+                        moviesListView.currentIndex = index
+                        currentMovie = moviesListView.model.get(index)
                         main.state = 'MOVIE'
                         moviesListView.mediaSelected(mediaId)
                     }
                     onItemHeld: {
                         main.state = 'MEDIA_PLAYER'
                         Movies.putMedia(0, mediaId)
+                    }
+                }
+            }
+
+            PersonView {
+                id: movieCastView
+                delegate: CastPersonDelegate {}
+
+                Connections {
+                    target: main
+                    onCurrentMovieChanged: {
+                        movieCastView.setPeople(currentMovie.credits.cast)
+                    }
+                }
+            }
+
+            PersonView {
+                id: movieCrewView
+                delegate: CrewPersonDelegate {}
+
+                Connections {
+                    target: main
+                    onCurrentMovieChanged: {
+                        movieCrewView.setPeople(currentMovie.credits.crew)
                     }
                 }
             }
