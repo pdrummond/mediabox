@@ -24,7 +24,8 @@ Rectangle {
             height: 150
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Play"
+            text: qsTr("Play")
+            iconSource: "xxhdpi/ic_action_play.png"
             onClicked: {
                 Movies.putControl(0, "control", "play")
             }
@@ -37,7 +38,8 @@ Rectangle {
             anchors.left: playButton.right
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Pause"
+            text: qsTr("Pause")
+            iconSource: "xxhdpi/ic_action_pause.png"
             onClicked: {
                 Movies.putControl(0, "control", "pause")
             }
@@ -50,7 +52,8 @@ Rectangle {
             anchors.left: pauseButton.right
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Stop"
+            iconSource: "xxhdpi/ic_action_stop.png"
+            text: qsTr("Stop")
             onClicked: {
                 Movies.putControl(0, "control", "stop")
                 main.state = "MOVIE"
@@ -64,7 +67,8 @@ Rectangle {
             anchors.top: playButton.bottom
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Previous"
+            iconSource: "xxhdpi/ic_action_previous.png"
+            text: qsTr("Previous")
             onClicked: {
                 Movies.putControl(0, "chapter", "previous")
             }
@@ -78,7 +82,8 @@ Rectangle {
             anchors.left: previousChapterButton.right
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Next"
+            iconSource: "xxhdpi/ic_action_next.png"
+            text: qsTr("Next")
             onClicked: {
                 Movies.putControl(0, "chapter", "next")
             }
@@ -91,7 +96,7 @@ Rectangle {
             anchors.top: previousChapterButton.bottom
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Slower"
+            text: qsTr("Slower")
             onClicked: {
                 Movies.putControl(0, "rate", "decrease")
             }
@@ -105,7 +110,7 @@ Rectangle {
             anchors.left: slowerRateButton.right
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Normal"
+            text: qsTr("Normal")
             onClicked: {
                 Movies.putControl(0, "rate", "reset")
             }
@@ -119,7 +124,7 @@ Rectangle {
             anchors.left: normalRateButton.right
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Faster"
+            text: qsTr("Faster")
             onClicked: {
                 Movies.putControl(0, "rate", "increase")
             }
@@ -132,7 +137,7 @@ Rectangle {
             anchors.top: slowerRateButton.bottom
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Step"
+            text: qsTr("Step")
             onClicked: {
                 Movies.putControl(0, "rate", "step")
             }
@@ -145,7 +150,8 @@ Rectangle {
             anchors.top: stepRateButton.bottom
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Rewind"
+            iconSource: "xxhdpi/ic_action_rewind.png"
+            text: qsTr("Rewind")
             onClicked: {
                 Movies.putControl(0, "time", "-30000")
             }
@@ -159,9 +165,25 @@ Rectangle {
             anchors.left: rewindButton.right
             anchors.leftMargin: 20
             anchors.topMargin: 20
-            text: "Skip"
+            iconSource: "xxhdpi/ic_action_fast_forward.png"
+            text: qsTr("Skip")
             onClicked: {
                 Movies.putControl(0, "time", "+30000")
+            }
+        }
+
+        Button {
+            id: muteButton
+            width: 620
+            height: 150
+            anchors.top: skipButton.bottom
+            anchors.leftMargin: 20
+            anchors.topMargin: 20
+            iconSource: "xxhdpi/ic_action_volume_on.png"
+            text: qsTr("Mute On")
+            checkable: true
+            onClicked: {
+                Movies.putControl(0, "volume", "mute")
             }
         }
     }

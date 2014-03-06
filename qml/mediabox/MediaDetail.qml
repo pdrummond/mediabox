@@ -210,7 +210,8 @@ Rectangle {
             height: 200
             anchors.margins: 20
             id: playMediaButton
-            text: "Play"
+            text: qsTr("Play")
+            iconSource: "xxhdpi/ic_action_play.png"
             onClicked: {
                 Movies.putMedia(0, mediaId)
             }
@@ -222,7 +223,8 @@ Rectangle {
             anchors.margins: 20
             id: resumeMediaButton
             anchors.right: parent.right
-            text: "Resume"
+            text: qsTr("Resume")
+            iconSource: "xxhdpi/ic_action_play.png"
             onClicked: {
                 // FIXME play from last position (if there is one)
                 Movies.putMedia(0, mediaId)
