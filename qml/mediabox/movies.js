@@ -51,7 +51,7 @@ function executePUT(url, type, body, onSuccess) {
     req.onreadystatechange = function() {
         if (req.readyState === XMLHttpRequest.DONE) {
             console.log("PUT done with status " + req.status);
-            if (req.status === 200) {
+            if (req.status === 200 || req.status === 204) { // FIXME!
                 onSuccess();
             }
         }
