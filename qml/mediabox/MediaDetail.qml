@@ -23,7 +23,16 @@ Rectangle {
     Connections {
         target: moviesListView
         onMediaSelected: {
-            Movies.getMovie(mediaId)
+            Movies.getMovie(
+                mediaId,
+                function(data) {
+                    var movie = data.movie;
+                    movie.genreNames = Movies.genres(movie.genres);
+                    movieDetailView.setMovie(movie);
+                },
+                function(req) {
+                    console.log("Failed to get movie: " + req.status)
+                })
         }
     }
 
@@ -213,7 +222,16 @@ Rectangle {
             text: qsTr("Play")
             iconSource: "xxhdpi/ic_action_play.png"
             onClicked: {
-                Movies.putMedia(0, mediaId)
+                Movies.putMedia(
+                    0,
+                    mediaId,
+                    function() {
+                        main.state = "MEDIA_PLAYER"
+                        console.log("Successfully played media")
+                    },
+                    function() {
+                        console.log("Failed to play media")
+                    })
             }
         }
 
@@ -227,7 +245,16 @@ Rectangle {
             iconSource: "xxhdpi/ic_action_play.png"
             onClicked: {
                 // FIXME play from last position (if there is one)
-                Movies.putMedia(0, mediaId)
+                Movies.putMedia(
+                    0,
+                    mediaId,
+                    function() {
+                        main.state = "MEDIA_PLAYER"
+                        console.log("Successfully played media")
+                    },
+                    function() {
+                        console.log("Failed to play media")
+                    })
             }
         }
 
@@ -259,7 +286,7 @@ Rectangle {
         mediaId = movie.id;
         // FIXME needs to hide/show/animate or whatever nicely - right now it displays old details before new loads
         // 300, 780, 1280
-        backdropImage.source = baseUrl + "w1280/" + movie.backdrop_path
+        backdropImage.source = baseUrl + "w1280" + movie.backdrop_path
         titleLabel.text = movie.title + ' (' + movie.release_date.substring(0,4) + ')'
         overviewLabel.text = movie.overview;
         genresLabel.text = movie.genreNames;
