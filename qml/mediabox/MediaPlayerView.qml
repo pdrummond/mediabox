@@ -27,7 +27,7 @@ Rectangle {
             text: qsTr("Play")
             iconSource: "xxhdpi/ic_action_play.png"
             onClicked: {
-                Movies.putControl(0, "control", "play")
+                Movies.putControl(0, "control", "play", function() {}, function() {})
             }
         }
 
@@ -41,7 +41,7 @@ Rectangle {
             text: qsTr("Pause")
             iconSource: "xxhdpi/ic_action_pause.png"
             onClicked: {
-                Movies.putControl(0, "control", "pause")
+                Movies.putControl(0, "control", "pause", function() {}, function() {})
             }
         }
 
@@ -55,7 +55,7 @@ Rectangle {
             iconSource: "xxhdpi/ic_action_stop.png"
             text: qsTr("Stop")
             onClicked: {
-                Movies.putControl(0, "control", "stop")
+                Movies.putControl(0, "control", "stop", function() {}, function() {})
                 main.state = "MOVIE"
             }
         }
@@ -70,7 +70,7 @@ Rectangle {
             iconSource: "xxhdpi/ic_action_previous.png"
             text: qsTr("Previous")
             onClicked: {
-                Movies.putControl(0, "chapter", "previous")
+                Movies.putControl(0, "chapter", "previous", function() {}, function() {})
             }
         }
 
@@ -85,7 +85,7 @@ Rectangle {
             iconSource: "xxhdpi/ic_action_next.png"
             text: qsTr("Next")
             onClicked: {
-                Movies.putControl(0, "chapter", "next")
+                Movies.putControl(0, "chapter", "next", function() {}, function() {})
             }
         }
 
@@ -98,7 +98,7 @@ Rectangle {
             anchors.topMargin: 20
             text: qsTr("Slower")
             onClicked: {
-                Movies.putControl(0, "rate", "decrease")
+                Movies.putControl(0, "rate", "decrease", function() {}, function() {})
             }
         }
 
@@ -112,7 +112,7 @@ Rectangle {
             anchors.topMargin: 20
             text: qsTr("Normal")
             onClicked: {
-                Movies.putControl(0, "rate", "reset")
+                Movies.putControl(0, "rate", "reset", function() {}, function() {})
             }
         }
 
@@ -126,7 +126,7 @@ Rectangle {
             anchors.topMargin: 20
             text: qsTr("Faster")
             onClicked: {
-                Movies.putControl(0, "rate", "increase")
+                Movies.putControl(0, "rate", "increase", function() {}, function() {})
             }
         }
 
@@ -139,7 +139,7 @@ Rectangle {
             anchors.topMargin: 20
             text: qsTr("Step")
             onClicked: {
-                Movies.putControl(0, "rate", "step")
+                Movies.putControl(0, "rate", "step", function() {}, function() {})
             }
         }
 
@@ -153,7 +153,7 @@ Rectangle {
             iconSource: "xxhdpi/ic_action_rewind.png"
             text: qsTr("Rewind")
             onClicked: {
-                Movies.putControl(0, "time", "-30000")
+                Movies.putControl(0, "time", "-30000", function() {}, function() {})
             }
         }
 
@@ -168,7 +168,7 @@ Rectangle {
             iconSource: "xxhdpi/ic_action_fast_forward.png"
             text: qsTr("Skip")
             onClicked: {
-                Movies.putControl(0, "time", "+30000")
+                Movies.putControl(0, "time", "+30000", function() {}, function() {})
             }
         }
 
@@ -183,7 +183,7 @@ Rectangle {
             text: qsTr("Mute On")
             checkable: true
             onClicked: {
-                Movies.putControl(0, "volume", "mute")
+                Movies.putControl(0, "volume", "mute", function() {}, function() {})
             }
         }
     }

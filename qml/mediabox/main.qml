@@ -114,7 +114,15 @@ Rectangle {
                     }
                     onItemHeld: {
                         main.state = 'MEDIA_PLAYER'
-                        Movies.putMedia(0, mediaId)
+                        Movies.putMedia(
+                            0,
+                            mediaId,
+                            function() {
+                                console.log("Successfully played media")
+                            },
+                            function() {
+                                console.log("Failed to play media")
+                            })
                     }
                 }
             }
@@ -126,7 +134,7 @@ Rectangle {
                 Connections {
                     target: main
                     onCurrentMovieChanged: {
-                        movieCastView.setPeople(currentMovie.credits.cast)
+//                        movieCastView.setPeople(currentMovie.credits.cast)
                     }
                 }
             }
@@ -138,7 +146,7 @@ Rectangle {
                 Connections {
                     target: main
                     onCurrentMovieChanged: {
-                        movieCrewView.setPeople(currentMovie.credits.crew)
+//                        movieCrewView.setPeople(currentMovie.credits.crew)
                     }
                 }
             }
@@ -154,7 +162,18 @@ Rectangle {
         }
 
         Component.onCompleted: {
-            Movies.getMovies()
+            Movies.getMovies(
+                function(data) {
+                    for (var i = 0; i < data.entries.length; i++) {
+                        var movie = data.entries[i].movie;
+                        movie.genreNames = Movies.genres(movie.genres);
+                        moviesModel.append(movie);
+                    }
+                    main.state = "MOVIES";
+                },
+                function(req) {
+                    console.log("Failed to get movies: " + req.status)
+                })
         }
     }
 }
