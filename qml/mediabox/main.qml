@@ -129,6 +129,7 @@ Rectangle {
 
             PersonView {
                 id: movieCastView
+                visible: false
                 delegate: CastPersonDelegate {}
 
                 Connections {
@@ -141,6 +142,7 @@ Rectangle {
 
             PersonView {
                 id: movieCrewView
+                visible: false
                 delegate: CrewPersonDelegate {}
 
                 Connections {
