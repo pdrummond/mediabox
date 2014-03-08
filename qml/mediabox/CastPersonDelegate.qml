@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
+import QtQuick.Layouts 1.1
 
-// FIXME maybe simple grid layout?
 // FIXME need to pull images from local cache rather than tmdb
 
 Rectangle {
@@ -9,59 +9,56 @@ Rectangle {
     property string baseUrl: "http://image.tmdb.org/t/p/"
 
     width: parent.width
-    height: castProfileImage.height
 
-    Image {
-        id : castProfileImage
-        source: baseUrl + "w185" + profile_path
-        width: 185
-        smooth: true
-        cache: true
-    }
+    // FIXME is there a better way? this is imageHeight + 2 * borderWidth + 2 * margins
+    height: 278 + 6 + 10
 
-    Label {
-        id: castLabel
-        width: (parent.width - (castProfileImage.width + asLabel.width + 40)) / 2
-        height: castProfileImage.height
-        anchors {
-            left: castProfileImage.right
-            leftMargin: 20
-        }
-        horizontalAlignment: Text.AlignRight
-        verticalAlignment: Text.AlignVCenter
-        font.pointSize: 14
-        elide: Text.ElideRight
-        text: name
-    }
+    color: "#d9d9cf"
+    radius: 10
 
-    Label {
-        id: asLabel
-        height: castProfileImage.height
-        anchors {
-            left: castLabel.right
-            leftMargin: 20
-            rightMargin: 20
-        }
-        verticalAlignment: Text.AlignVCenter
-        font {
-            pointSize: 14
-            bold: true
-            italic: true
-        }
-        text: qsTr("as")
-    }
+    RowLayout {
+        id: content
 
-    Label {
-        id: characterLabel
-        width: (parent.width - (castProfileImage.width + asLabel.width + 40)) / 2
-        height: castProfileImage.height
-        anchors {
-            left: asLabel.right
-            leftMargin: 20
+        anchors.margins: 5
+        anchors.fill: parent
+        spacing: 5
+
+        LineBorderedImage {
+            color: "black"
+            borderWidth: 3
+            radius: 5
+            imageSource: baseUrl + "w185" + profile_path
+            imageWidth: 185
+            imageHeight: 278
+            Layout.alignment: Qt.AlignTop
         }
-        verticalAlignment: Text.AlignVCenter
-        font.pointSize: 14
-        elide: Text.ElideRight
-        text: character
+
+        ColumnLayout {
+
+            Label {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                horizontalAlignment: Text.AlignLeft
+                verticalAlignment: Text.AlignTop
+                anchors.fill: parent
+                font.bold: true
+                anchors.margins: 10
+                elide: Text.ElideRight
+                text: name
+            }
+
+            Label {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignRight
+                horizontalAlignment: Text.AlignRight
+                verticalAlignment: Text.AlignBottom
+                anchors.fill: parent
+                anchors.margins: 10
+                font.italic: true
+                elide: Text.ElideRight
+                text: character
+            }
+        }
     }
 }
