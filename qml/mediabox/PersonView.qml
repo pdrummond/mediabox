@@ -6,6 +6,8 @@ ListView {
     height: parent.height
 
     anchors.fill: parent
+    anchors.margins: 5
+    spacing: 5
 
     maximumFlickVelocity: 6000 //Flick speed on Android is slow without this
     cacheBuffer: 10000
@@ -24,5 +26,6 @@ ListView {
                 peopleModel.append(person)
             }
         }
+        // FIXME need to show the top item of the listview, it remembers where it was it seems
     }
 }
