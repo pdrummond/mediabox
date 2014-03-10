@@ -1,5 +1,7 @@
 import QtQuick 2.1
 
+import NetworkDiscovery 1.0
+
 import "movies.js" as Movies;
 
 Rectangle {
@@ -7,11 +9,36 @@ Rectangle {
     id: main
 
     width: 1080
-    height: 900
+    height: 1100
 
     state: "LOADING"
 
+    property string mediaboxHost
+    property int mediaboxPort
+
     property variant currentMovie
+
+    NetworkDiscovery {
+        id: networkDiscovery
+        broadcastAddress: "192.168.0.255" // FIXME config, or can this be determined at run-time?
+        broadcastPort: 5555
+        onDiscoveredServer: {
+            mediaboxHost = host
+            mediaboxPort = port
+            Movies.getMovies(
+                function(data) {
+                    for (var i = 0; i < data.entries.length; i++) {
+                        var movie = data.entries[i].movie;
+                        movie.genreNames = Movies.genres(movie.genres);
+                        moviesModel.append(movie);
+                    }
+                    main.state = "MOVIES";
+                },
+                function(req) {
+                    console.log("Failed to get movies: " + req.status)
+                })
+        }
+    }
 
     // FIXME probably a viewstack would be better than this
     states: [
@@ -65,11 +92,15 @@ Rectangle {
     Rectangle {
         anchors.fill:parent;
 
+        color: "black"
+
         Rectangle {
             id: wrapper
             width : parent.width
             height: parent.height
             anchors.fill:parent
+
+            color: parent.color
 
             Text {
                 id: loadingView
@@ -92,7 +123,7 @@ Rectangle {
                 visible: false
                 anchors.fill: parent
                 anchors.margins: 5
-                spacing:30
+                spacing: 5
 //                highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
                 model: moviesModel
                 maximumFlickVelocity: 6000 //Flick speed on Android is slow without this
@@ -135,7 +166,16 @@ Rectangle {
                 Connections {
                     target: main
                     onCurrentMovieChanged: {
-//                        movieCastView.setPeople(currentMovie.credits.cast)
+                        movieCastView.setPeople(currentMovie.credits.cast)
+                    }
+                }
+
+                Keys.onPressed: {
+                    if (visible && focus) {
+                        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
+                            main.state = 'MOVIE'
+                            event.accepted = true
+                        }
                     }
                 }
             }
@@ -148,7 +188,16 @@ Rectangle {
                 Connections {
                     target: main
                     onCurrentMovieChanged: {
-//                        movieCrewView.setPeople(currentMovie.credits.crew)
+                        movieCrewView.setPeople(currentMovie.credits.crew)
+                    }
+                }
+
+                Keys.onPressed: {
+                    if (visible && focus) {
+                        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
+                            main.state = 'MOVIE'
+                            event.accepted = true
+                        }
                     }
                 }
             }
@@ -164,18 +213,7 @@ Rectangle {
         }
 
         Component.onCompleted: {
-            Movies.getMovies(
-                function(data) {
-                    for (var i = 0; i < data.entries.length; i++) {
-                        var movie = data.entries[i].movie;
-                        movie.genreNames = Movies.genres(movie.genres);
-                        moviesModel.append(movie);
-                    }
-                    main.state = "MOVIES";
-                },
-                function(req) {
-                    console.log("Failed to get movies: " + req.status)
-                })
+            networkDiscovery.discoverServer();
         }
     }
 }
