@@ -1,15 +1,24 @@
 
 // FIXME when swapping views (quickly) do we have to cancel outstanding requests?
-// FIXME serviceUrl will come from config, it's hard-coded right now
 
 /**
  * Get the web-service URL.
+ *
+ * The web-service host and port are provided by QML properties in the main application page.
  *
  * @param requestPath
  * @return
  */
 function serviceUrl(requestPath) {
-    return "http://192.168.0.6:8888/mediabox/" + requestPath;
+    return "http://" + main.mediaboxHost + ":" + main.mediaboxPort + "/mediabox/" + requestPath;
+}
+
+/**
+ * Mapping of a simple type to a content-type.
+ */
+var contentTypeMap = {
+    "text": "text/plain",
+    "json": "application/json"
 }
 
 /**
@@ -44,7 +53,7 @@ function executeGET(url, onSuccess, onError) {
  * Execute an HTTP PUT request (asynchronously).
  *
  * @param url request URL
- * @param type FIXME for now assume text/plain for everything because that's all we need right now
+ * @param type content type of the request body, one of "text" or "json"
  * @param body request body to put
  * @param onSuccess success callback function
  * @param onError error callback function
@@ -64,7 +73,7 @@ function executePUT(url, type, body, onSuccess, onError) {
         }
     }
     req.open("PUT", url);
-    req.setRequestHeader("Content-Type", "text/plain");
+    req.setRequestHeader("Content-Type", contentTypeMap[type]);
     req.setRequestHeader("Content-Length", body.length);
     req.setRequestHeader("Connection", "close"); // FIXME why?
     req.send(body);
@@ -153,10 +162,6 @@ function putMedia(mediaPlayer, media, onSuccess, onError) {
         media,
         onSuccess,
         onError
-//        function() {
-//            console.log("Put media succeeded");
-//            main.state = "MEDIA_PLAYER"
-//        }
     );
     console.log("[<] putMedia()");
     return req;
