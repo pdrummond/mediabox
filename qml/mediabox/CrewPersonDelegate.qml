@@ -29,7 +29,7 @@ Rectangle {
         LineBorderedImage {
             color: "black"
             borderWidth: 3
-            radius: 5
+            radius: 6
             imageSource: baseUrl + "w185" + profile_path
             imageWidth: 185
             imageHeight: 278
@@ -43,7 +43,6 @@ Rectangle {
                 Layout.fillHeight: true
                 horizontalAlignment: Text.AlignLeft
                 verticalAlignment: Text.AlignTop
-                anchors.fill: parent
                 font.bold: true
                 anchors.margins: 10
                 elide: Text.ElideRight
@@ -56,7 +55,6 @@ Rectangle {
                 Layout.alignment: Qt.AlignRight
                 horizontalAlignment: Text.AlignRight
                 verticalAlignment: Text.AlignBottom
-                anchors.fill: parent
                 anchors.margins: 10
                 font.italic: true
                 elide: Text.ElideRight
