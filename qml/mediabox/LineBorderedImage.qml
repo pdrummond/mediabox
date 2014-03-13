@@ -5,11 +5,12 @@ import QtQuick 2.0
  */
 Rectangle {
 
-    property int borderWidth
+    property int borderWidth: 1
 
     property alias imageSource: image.source
     property alias imageWidth: image.width
     property alias imageHeight: image.height
+    property alias fillMode: image.fillMode
 
     width: image.width + (2 * borderWidth)
     height: image.height + (2 * borderWidth)
