@@ -3,22 +3,381 @@ import QtQuick.Controls 1.1
 
 import "movies.js" as Movies;
 
+// FIXME whole thing needs to scroll vertically to fit content (maybe don't scroll title)
 // FIXME maybe swipe left/right to show cast/crew/chapters/bookmarks and so on?
+
+// FIXME title needs more padding like the cast/crew (but no border!)
+// FIXME overview bottom border is not quite right wrt the top border
+
+// FIXME need to defer presentation/transition until image loaded or something
+
+// Things i learned - to have a margin, you must have an anchor! seems obvious in hindsight
 
 Rectangle {
 
     property string baseUrl: "http://image.tmdb.org/t/p/"
+
+    property int headerFontSize: 16
 
     // FIXME can I have a property for the Javascript object "movie" ?
     property int mediaId
 
     height: 62
 
-    anchors.fill: parent
-    anchors.margins: 5
-
+    color: "#d9d9cf"
     radius: 10
-    color : "#d9d9cf"
+
+    anchors {
+        fill: parent
+        margins: 5
+    }
+
+    Rectangle {
+        id: contentWrapper
+        color: "white"
+        radius: 6
+        anchors {
+            fill: parent
+            margins: 10
+        }
+
+        Rectangle {
+            id: headerContainer
+            color: parent.color
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+                margins: 5
+            }
+            height: titleLabel.height + headerBorder.height
+
+            Label {
+                id: titleLabel
+                width: parent.width - yearLabel.width
+                elide: "ElideRight"
+                font {
+                    pointSize: headerFontSize
+                    bold: true
+                }
+            }
+
+            Label {
+                id: yearLabel
+                anchors.left: titleLabel.right
+                horizontalAlignment: Text.AlignRight
+                font {
+                    pointSize: headerFontSize
+                    bold: true
+                }
+            }
+
+            Rectangle {
+                id: headerBorder
+                color: "silver"
+                anchors {
+                    top: titleLabel.bottom
+                    left: parent.left
+                    right: parent.right
+                }
+                height: 3
+            }
+        }
+
+        Rectangle {
+            id: artworkContainer
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: headerContainer.bottom
+                margins: 5
+            }
+            width: parent.width
+            height: artwork.height
+
+            LineBorderedImage {
+                anchors.fill: parent
+                id: artwork
+                color: "black"
+                borderWidth: 3
+                radius: 6
+//                imageSource: baseUrl + "w1280" + backdrop_path
+                imageWidth: parent.width - (2 * borderWidth) // FIXME this adjustment should not be needed
+                imageHeight: 500
+                fillMode: Image.PreserveAspectCrop
+            }
+        }
+
+        Rectangle {
+            id: contentTopBorder
+            color: "silver"
+            anchors {
+                top: artworkContainer.bottom
+                left: parent.left
+                right: parent.right
+                margins: 5
+            }
+            height: 3
+        }
+
+        Rectangle {
+            id: castWrapper
+            color: "black"
+            radius: 6
+
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: contentTopBorder.bottom
+                margins: 5
+            }
+
+            height: castContainer.height + (2 * castContainer.anchors.margins)
+
+            Rectangle {
+                id: castContainer
+                radius: 6
+                color: "white"
+                anchors {
+                    top: castWrapper.top
+                    left: parent.left
+                    right: parent.right
+                    margins: 2
+                }
+                height: starringLabel.height + (2 * starringLabel.anchors.margins)
+
+                Label {
+                    id: starringLabel
+
+                    anchors {
+                        left: castContainer.left
+                        top: castContainer.top
+                        margins: 10
+                    }
+
+                    text: qsTr("Starring")
+
+                    font.pointSize: headerFontSize
+                }
+
+                Label {
+                    id: castLabel
+                    anchors {
+                        top: castContainer.top
+                        left: starringLabel.right
+                        right: parent.right
+                        margins: 10
+                    }
+                    elide: Text.ElideRight
+                    width: parent.width - (starringLabel.width + 2 * starringLabel.anchors.margins)
+                    font {
+                        pointSize: headerFontSize
+                        bold: true
+                    }
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: main.state = "CAST"
+            }
+        }
+
+        Rectangle {
+            id: crewWrapper
+            color: "black"
+            radius: 6
+
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: castWrapper.bottom
+                margins: 5
+            }
+
+            height: crewContainer.height + (2 * crewContainer.anchors.margins)
+
+            Rectangle {
+                id: crewContainer
+                radius: 6
+                color: "white"
+                anchors {
+                    top: crewWrapper.top
+                    left: parent.left
+                    right: parent.right
+                    margins: 2
+                }
+                height: directedByLabel.height + (2 * directedByLabel.anchors.margins)
+
+                Label {
+                    id: directedByLabel
+
+                    anchors {
+                        left: crewContainer.left
+                        top: crewContainer.top
+                        margins: 10
+                    }
+
+                    text: qsTr("Directed by")
+
+                    font.pointSize: headerFontSize
+                }
+
+                Label {
+                    id: directorLabel
+                    anchors {
+                        top: crewContainer.top
+                        left: directedByLabel.right
+                        right: parent.right
+                        margins: 10
+                    }
+                    elide: Text.ElideRight
+                    width: parent.width - (directedByLabel.width + 2 * directedByLabel.anchors.margins)
+                    font {
+                        pointSize: headerFontSize
+                        bold: true
+                    }
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: main.state = "CREW"
+            }
+        }
+
+        Rectangle {
+            id: overviewTopBorder
+            color: "silver"
+            anchors {
+                top: crewWrapper.bottom
+                left: parent.left
+                right: parent.right
+                margins: 5
+            }
+            height: 3
+        }
+
+        Rectangle {
+            id: overviewWrapper
+            width: parent.width
+            height: overviewContainer.height + (2 * overviewContainer.anchors.margins)
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: overviewTopBorder.bottom
+                margins: 10
+            }
+
+            Rectangle {
+                id: overviewContainer
+
+                radius: 6
+                color: "white"
+                anchors {
+                    top: overviewWrapper.top
+                    left: parent.left
+                    right: parent.right
+                    margins: 20
+                }
+                height: overviewLabel.height //+ (2 * overviewLabel.anchors.margins)
+
+                Label {
+                    id: overviewLabel
+                    width: parent.width
+    //                height: parent.parent.height - (titleLabel.height + backdropImage.height + directionWrapper.height + castWrapper.height + genreWrapper.height + buttonsWrapper.height) // FIXME all the margins too
+                    elide: Text.ElideRight
+                    wrapMode: Text.Wrap
+                    font.pointSize: headerFontSize
+                }
+            }
+        }
+
+        Rectangle {
+            id: overviewBottomBorder
+            color: "silver"
+            anchors {
+                top: overviewWrapper.bottom
+                left: parent.left
+                right: parent.right
+                margins: 5
+            }
+            height: 3
+        }
+
+        Rectangle {
+            id: genresWrapper
+            anchors {
+                top: overviewBottomBorder.bottom
+                left: parent.left
+                right: parent.right
+                margins: 5
+            }
+            height: genresLabel.height + (2 * genresLabel.anchors.margins)
+
+            Label {
+                id: runtimeLabel
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                }
+                font {
+                    pointSize: headerFontSize
+                    bold: true
+                }
+            }
+
+            Label {
+                id: genresLabel
+                anchors {
+                    top: parent.top
+                    left: runtimeLabel.right
+                    right: parent.right
+                    leftMargin: 5
+                    rightMargin: 5
+                }
+                width: parent.width - runtimeLabel.width
+                elide: Text.ElideRight
+                font {
+                    pointSize: headerFontSize
+                    italic: true
+                    bold: true
+                }
+                horizontalAlignment: Text.AlignRight
+            }
+        }
+
+        Rectangle {
+            id: genresBottomBorder
+            color: "silver"
+            anchors {
+                top: genresWrapper.bottom
+                left: parent.left
+                right: parent.right
+                margins: 5
+            }
+            height: 3
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     Connections {
         target: moviesListView
@@ -36,242 +395,64 @@ Rectangle {
         }
     }
 
-    Label {
-        id: titleLabel
-        width: parent.width
-        elide: Text.ElideRight
-        font {
-            pointSize: 16
-            bold: true
-        }
-    }
+//    // FIXME maybe a GridLayout for these...
 
-    Image {
-        id: backdropImage
-        width: parent.width
-//        height: 300 // FIXME?
-        anchors {
-            margins: 10
-            top: titleLabel.bottom
-        }
-        fillMode: Image.PreserveAspectCrop
-        smooth: true
-        cache: true
 
-//        asynchronous: true
-    }
 
-    // FIXME maybe a GridLayout for these...
-
-    Rectangle {
-        id: directionWrapper
-        width: parent.width
-        height: directedByLabel.height + 20
-        color: "white"
-        radius: 2
-        anchors {
-            topMargin: 10
-            leftMargin: 10
-            rightMargin: 10
-            top: backdropImage.bottom
-        }
-
-        Label {
-            id: directedByLabel
-            text: "Directed by"
-            font.pointSize: 14
-        }
-
-        Label {
-            id: directorLabel
-            width: parent.width - (directedByLabel.width + 10)
-            elide: Text.ElideRight
-            anchors {
-                leftMargin: 10
-                left: directedByLabel.right
-            }
-            font {
-                pointSize: 14
-                bold: true
-            }
-
-        }
-
-        MouseArea {
-            width: parent.width
-            height: parent.height
-            onClicked: {
-                console.log("SHOW CREW DETAILED VIEW!")
-            }
-        }
-    }
-
-    Rectangle {
-        id: castWrapper
-        width: parent.width
-        height: starringLabel.height + 20
-        color: "white"
-        radius: 2
-        anchors {
-            topMargin: 10
-            leftMargin: 10
-            rightMargin: 10
-            top: directionWrapper.bottom
-        }
-
-        Label {
-            id: starringLabel
-            text: "Starring"
-            font.pointSize: 14
-        }
-
-        Label {
-            id: castLabel
-            width: parent.width - (starringLabel.width + 10)
-            elide: Text.ElideRight
-            anchors {
-                leftMargin: 10
-                left: starringLabel.right
-            }
-            font {
-                pointSize: 14
-                bold: true
-            }
-        }
-
-        MouseArea {
-            width: parent.width
-            height: parent.height
-            onClicked: {
-                console.log("SHOW CAST DETAILED VIEW!")
-            }
-        }
-    }
-
-    Rectangle {
-        id: genreWrapper
-        width: parent.width
-        height: genresLabel.height + 20
-        color: "white"
-        radius: 2
-        anchors {
-            topMargin: 10
-            leftMargin: 10
-            rightMargin: 10
-            top: castWrapper.bottom
-        }
-
-        Label {
-            id: genreLabel
-            font.pointSize: 14
-            text: "Genre"
-        }
-
-        Label {
-            id: genresLabel
-            width: parent.width - (genreLabel.width + 10)
-            elide: Text.ElideRight
-            anchors {
-                leftMargin: 10
-                left: genreLabel.right
-            }
-
-            font {
-                pointSize: 14
-                bold: true
-                italic: true
-            }
-        }
-    }
-
-    // FIXME would be good to scroll the overview up/down if it doesn't fit
-
-    Rectangle {
-        id: overviewWrapper
-        width: parent.width
-        height: overviewLabel.height
-        anchors {
-            margins: 10
-            top: genreWrapper.bottom
-        }
-
-        Label {
-            id: overviewLabel
-            width: parent.width
-            height: parent.parent.height - (titleLabel.height + backdropImage.height + directionWrapper.height + castWrapper.height + genreWrapper.height + buttonsWrapper.height) // FIXME all the margins too
-            elide: Text.ElideRight
-            wrapMode: Text.Wrap
-            font.pointSize: 14
-        }
-    }
-
-    Rectangle {
-        id: buttonsWrapper
-        width: parent.width
-        height: playMediaButton.height + 40
-        anchors {
-            margins: 10
-            top: overviewWrapper.bottom
-        }
-
-        Button {
-            width: 400
-            height: 200
-            anchors.margins: 20
-            id: playMediaButton
-            text: qsTr("Play")
-            iconSource: "xxhdpi/ic_action_play.png"
-            onClicked: {
-                Movies.putMedia(
-                    0,
-                    mediaId,
-                    function() {
-                        main.state = "MEDIA_PLAYER"
-                        console.log("Successfully played media")
-                    },
-                    function() {
-                        console.log("Failed to play media")
-                    })
-            }
-        }
-
-        Button {
-            width: 400
-            height: 200
-            anchors.margins: 20
-            id: resumeMediaButton
-            anchors.right: parent.right
-            text: qsTr("Resume")
-            iconSource: "xxhdpi/ic_action_play.png"
-            onClicked: {
-                // FIXME play from last position (if there is one)
-                Movies.putMedia(
-                    0,
-                    mediaId,
-                    function() {
-                        main.state = "MEDIA_PLAYER"
-                        console.log("Successfully played media")
-                    },
-                    function() {
-                        console.log("Failed to play media")
-                    })
-            }
-        }
-
-    }
-
-/*
-            Text {
-                id: runtimeText
-                anchors.top: directedBy.bottom
-                width: parent.width
-                elide: Text.ElideRight
-                font {
-                    pointSize: 14
-                }
-            }
-*/
+//    Rectangle {
+//        id: buttonsWrapper
+//        width: parent.width
+//        height: playMediaButton.height + 40
+//        anchors {
+//            margins: 10
+//            top: overviewWrapper.bottom
 //        }
+
+//        Button {
+//            width: 400
+//            height: 200
+//            anchors.margins: 20
+//            id: playMediaButton
+//            text: qsTr("Play")
+//            iconSource: "xxhdpi/ic_action_play.png"
+//            onClicked: {
+//                Movies.putMedia(
+//                    0,
+//                    mediaId,
+//                    function() {
+//                        main.state = "MEDIA_PLAYER"
+//                        console.log("Successfully played media")
+//                    },
+//                    function() {
+//                        console.log("Failed to play media")
+//                    })
+//            }
+//        }
+
+//        Button {
+//            width: 400
+//            height: 200
+//            anchors.margins: 20
+//            id: resumeMediaButton
+//            anchors.right: parent.right
+//            text: qsTr("Resume")
+//            iconSource: "xxhdpi/ic_action_play.png"
+//            onClicked: {
+//                // FIXME play from last position (if there is one)
+//                Movies.putMedia(
+//                    0,
+//                    mediaId,
+//                    function() {
+//                        main.state = "MEDIA_PLAYER"
+//                        console.log("Successfully played media")
+//                    },
+//                    function() {
+//                        console.log("Failed to play media")
+//                    })
+//            }
+//        }
+
+//    }
 
     Keys.onPressed: {
         if (visible && focus) {
@@ -286,29 +467,39 @@ Rectangle {
         mediaId = movie.id;
         // FIXME needs to hide/show/animate or whatever nicely - right now it displays old details before new loads
         // 300, 780, 1280
-        backdropImage.source = baseUrl + "w1280" + movie.backdrop_path
-        titleLabel.text = movie.title + ' (' + movie.release_date.substring(0,4) + ')'
+
+        titleLabel.text = movie.title;
+        yearLabel.text = '(' + movie.release_date.substring(0,4) + ')';
+
+        artwork.imageSource = baseUrl + "w1280" + movie.backdrop_path
+
         overviewLabel.text = movie.overview;
         genresLabel.text = movie.genreNames;
 
-        for (var i = 0; i < movie.credits.crew.length; i++) {
-            var crew = movie.credits.crew[i];
-            if (crew.job === "Director") {
-                directorLabel.text = crew.name;
-            }
-        }
+        var i;
 
         var castValue = "";
         for (i = 0; i < movie.credits.cast.length; i++) {
-            var cast = movie.credits.cast[i];
             if (i > 0) {
                 castValue += ", "
             }
-
-            castValue += cast.name
+            castValue += movie.credits.cast[i].name
         }
         castLabel.text = castValue
 
-//        runtimeText.text = movie.runtime + " minutes";
+        var directorValue = ""
+        var crew
+        for (i = 0; i < movie.credits.crew.length; i++) {
+            crew = movie.credits.crew[i]
+            if (crew.job === "Director") {
+                if (directorValue.length > 0) {
+                    directorValue += ", "
+                }
+                directorValue += crew.name
+            }
+        }
+        directorLabel.text = directorValue
+
+        runtimeLabel.text = movie.runtime + qsTr("m");
     }
 }
