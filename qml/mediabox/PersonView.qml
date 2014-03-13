@@ -18,6 +18,7 @@ ListView {
     }
 
     function setPeople(people) {
+        positionViewAtBeginning()
         peopleModel.clear()
         var person;
         for (var i = 0; i < people.length; i++) {
@@ -26,6 +27,5 @@ ListView {
                 peopleModel.append(person)
             }
         }
-        // FIXME need to show the top item of the listview, it remembers where it was it seems
     }
 }
