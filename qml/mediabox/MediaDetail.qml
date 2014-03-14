@@ -13,6 +13,7 @@ import "movies.js" as Movies;
 
 // Things i learned - to have a margin, you must have an anchor! seems obvious in hindsight
 
+
 Rectangle {
 
     property string baseUrl: "http://image.tmdb.org/t/p/"
@@ -357,6 +358,50 @@ Rectangle {
                 margins: 5
             }
             height: 3
+        }
+
+        Rectangle {
+            id: buttonsWrapper
+            height: buttonsContainer.height + (2* buttonsContainer.anchors.margins)
+            anchors {
+                top: genresBottomBorder.bottom
+                left: parent.left
+                right: parent.right
+                margins: 5
+            }
+
+            Rectangle {
+                id: buttonsContainer
+                height: playMediaButton.height + (2 * playMediaButton.anchors.margins)
+                anchors {
+                    fill: parent
+                    left: parent.left
+                    right: parent.right
+                }
+
+                Button {
+                    width: 400
+                    height: 200
+                    anchors.margins: 20
+                    anchors.verticalCenter: buttonsContainer.verticalCenter
+                    anchors.horizontalCenter: buttonsContainer.horizontalCenter
+                    id: playMediaButton
+                    text: qsTr("Play")
+                    iconSource: "xxhdpi/ic_action_play.png"
+                    onClicked: {
+                        Movies.putMedia(
+                            0,
+                            mediaId,
+                            function() {
+                                main.state = "MEDIA_PLAYER"
+                                console.log("Successfully played media")
+                            },
+                            function() {
+                                console.log("Failed to play media")
+                            })
+                    }
+                }
+            }
         }
     }
 
