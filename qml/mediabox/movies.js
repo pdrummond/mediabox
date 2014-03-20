@@ -9,8 +9,12 @@
  * @param requestPath
  * @return
  */
-function serviceUrl(requestPath) {
-    return "http://" + main.mediaboxHost + ":" + main.mediaboxPort + "/mediabox/" + requestPath;
+function serviceUrl(requestPath, data) {
+    var url = "http://" + main.mediaboxHost + ":" + main.mediaboxPort + "/mediabox/" + requestPath;
+    if (data && data.length > 0) {
+        url += '?' + data;
+    }
+    return url;
 }
 
 /**
@@ -92,16 +96,45 @@ function isSuccess(req) {
 }
 
 /**
- * Get the movie media catalog (asynchronously).
+ * Get various information about the movie catalog, e.g. available genres, years, directors, actors
+ * and so on.
  *
  * @param onSuccess success callback function
  * @param onError error callback function
  * @return XML HTTP request
  */
-function getMovies(onSuccess, onError) {
-    console.log("[>] getMovies()")
+function getMoviesInfo(onSuccess, onError) {
+    console.log("[>] getMoviesInfo()")
     var req = executeGET(
-        serviceUrl("movies"),
+        serviceUrl("movies/info"),
+        onSuccess,
+        onError
+    );
+    console.log("[<] getMoviesInfo()")
+    return req;
+}
+
+/**
+ * Get the movie media catalog (asynchronously).
+ *
+ * @param criteria search criteria
+ * @param onSuccess success callback function
+ * @param onError error callback function
+ * @return XML HTTP request
+ */
+function getMovies(criteria, onSuccess, onError) {
+    console.log("[>] getMovies()")
+    var params = ''
+    if (criteria.genres) {
+        for (var i = 0; i < criteria.genres.length; i++) {
+            if (i > 0) {
+                params += '&'
+            }
+            params += 'genre=' + encodeURIComponent(criteria.genres[i])
+        }
+    }
+    var req = executeGET(
+        serviceUrl("movies", params),
         onSuccess,
         onError
     );
@@ -120,7 +153,7 @@ function getMovies(onSuccess, onError) {
 function getMovie(media, onSuccess, onError) {
     console.log("[>] getMovie(media=" + media + ")");
     var req = executeGET(
-        serviceUrl("movies/" + media),
+        serviceUrl("movie/" + media),
         onSuccess,
         onError
     );
