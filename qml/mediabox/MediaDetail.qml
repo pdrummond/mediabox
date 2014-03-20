@@ -13,6 +13,7 @@ import "movies.js" as Movies;
 
 // Things i learned - to have a margin, you must have an anchor! seems obvious in hindsight
 
+// FIXME need to use titledview
 
 Rectangle {
 
@@ -23,15 +24,13 @@ Rectangle {
     // FIXME can I have a property for the Javascript object "movie" ?
     property int mediaId
 
+    signal castActivated
+    signal crewActivated
+
     height: 62
 
     color: "#d9d9cf"
     radius: 10
-
-    anchors {
-        fill: parent
-        margins: 5
-    }
 
     Rectangle {
         id: contentWrapper
@@ -180,7 +179,7 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: main.state = "CAST"
+                onClicked: castActivated()
             }
         }
 
@@ -243,7 +242,7 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: main.state = "CREW"
+                onClicked: crewActivated()
             }
         }
 
@@ -379,6 +378,7 @@ Rectangle {
                     right: parent.right
                 }
 
+                // FIXME this should be moved to a signal so that the main.qml can manage it?
                 Button {
                     width: 400
                     height: 200
@@ -389,11 +389,12 @@ Rectangle {
                     text: qsTr("Play")
                     iconSource: "xxhdpi/ic_action_play.png"
                     onClicked: {
+                        // FIXME should probably emit a signal instead?
                         Movies.putMedia(
                             0,
                             mediaId,
                             function() {
-                                main.state = "MEDIA_PLAYER"
+                                stackView.push(mediaPlayerView)
                                 console.log("Successfully played media")
                             },
                             function() {
@@ -427,6 +428,11 @@ Rectangle {
     Connections {
         target: moviesListView
         onMediaSelected: {
+            // FIXME not sure this is the best way
+            var movie = moviesListView.model.get(selectedIndex)
+            var mediaId = movie.id;
+            // also not sure if i should do web-service here or just use the value from the model!?
+
             Movies.getMovie(
                 mediaId,
                 function(data) {
@@ -437,74 +443,6 @@ Rectangle {
                 function(req) {
                     console.log("Failed to get movie: " + req.status)
                 })
-        }
-    }
-
-//    // FIXME maybe a GridLayout for these...
-
-
-
-//    Rectangle {
-//        id: buttonsWrapper
-//        width: parent.width
-//        height: playMediaButton.height + 40
-//        anchors {
-//            margins: 10
-//            top: overviewWrapper.bottom
-//        }
-
-//        Button {
-//            width: 400
-//            height: 200
-//            anchors.margins: 20
-//            id: playMediaButton
-//            text: qsTr("Play")
-//            iconSource: "xxhdpi/ic_action_play.png"
-//            onClicked: {
-//                Movies.putMedia(
-//                    0,
-//                    mediaId,
-//                    function() {
-//                        main.state = "MEDIA_PLAYER"
-//                        console.log("Successfully played media")
-//                    },
-//                    function() {
-//                        console.log("Failed to play media")
-//                    })
-//            }
-//        }
-
-//        Button {
-//            width: 400
-//            height: 200
-//            anchors.margins: 20
-//            id: resumeMediaButton
-//            anchors.right: parent.right
-//            text: qsTr("Resume")
-//            iconSource: "xxhdpi/ic_action_play.png"
-//            onClicked: {
-//                // FIXME play from last position (if there is one)
-//                Movies.putMedia(
-//                    0,
-//                    mediaId,
-//                    function() {
-//                        main.state = "MEDIA_PLAYER"
-//                        console.log("Successfully played media")
-//                    },
-//                    function() {
-//                        console.log("Failed to play media")
-//                    })
-//            }
-//        }
-
-//    }
-
-    Keys.onPressed: {
-        if (visible && focus) {
-            if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
-                main.state = 'MOVIES'
-                event.accepted = true
-            }
         }
     }
 

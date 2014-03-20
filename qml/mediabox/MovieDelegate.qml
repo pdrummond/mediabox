@@ -8,6 +8,8 @@ import QtQuick.Controls 1.1
  */
 Rectangle {
 
+    id: container
+
     property string baseUrl: "http://image.tmdb.org/t/p/"
 
     property int headerFontSize: 16
@@ -165,12 +167,15 @@ Rectangle {
     }
 
     MouseArea {
+
         anchors.fill: parent
         onClicked: {
             itemClicked(id)
+            container.ListView.view.currentIndex = index
         }
-        onPressAndHold: {
-            itemHeld(id)
-        }
+//        onPressAndHold: {
+//            itemHeld(id)
+//        }
+
     }
 }

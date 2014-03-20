@@ -203,8 +203,4 @@ TitledView {
             }
         }
     }
-
-    onBack: {
-        main.state = 'MOVIE'
-    }
 }

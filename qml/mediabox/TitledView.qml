@@ -18,13 +18,10 @@ Rectangle {
     property alias header: headerContainer.data
     property alias content: contentContainer.data
 
-    signal back
-
     color: "#d9d9cf"
     radius: 10
 
     anchors {
-        fill: parent
         margins: viewMargin
     }
 
@@ -76,15 +73,6 @@ Rectangle {
                     topMargin: headerSpacing
                 }
 //                height: childrenRect.height
-            }
-        }
-    }
-
-    Keys.onPressed: {
-        if (visible && focus) { // FIXME is this necessary with proper management of focus property?
-            if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
-                back()
-                event.accepted = true
             }
         }
     }

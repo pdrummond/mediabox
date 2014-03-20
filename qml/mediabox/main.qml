@@ -1,4 +1,5 @@
 import QtQuick 2.1
+import QtQuick.Controls 1.1
 
 import NetworkDiscovery 1.0
 
@@ -11,12 +12,10 @@ Rectangle {
     width: 1080
     height: 1100
 
-    state: "LOADING"
+    focus: true
 
     property string mediaboxHost
     property int mediaboxPort
-
-    property variant currentMovie
 
     NetworkDiscovery {
         id: networkDiscovery
@@ -25,14 +24,33 @@ Rectangle {
         onDiscoveredServer: {
             mediaboxHost = host
             mediaboxPort = port
-            Movies.getMovies(
+
+            Movies.getMoviesInfo(
                 function(data) {
+                    genresModel.clear();
+                    yearsModel.clear();
+                    var i;
+                    for (i = 0; i < data.genres.length; i++) {
+                        genresModel.append({genre: data.genres[i], toggled: false});
+                    }
+                    for (i = 0; i < data.years.length; i++) {
+                        yearsModel.append({year: data.years[i], toggled: false});
+                    }
+                },
+                function(req) {
+                })
+
+            Movies.getMovies(
+                {},
+                function(data) {
+//                    moviesListView.positionViewAtBeginning()
+                    moviesModel.clear();
                     for (var i = 0; i < data.entries.length; i++) {
                         var movie = data.entries[i].movie;
                         movie.genreNames = Movies.genres(movie.genres);
                         moviesModel.append(movie);
                     }
-                    main.state = "MOVIES";
+                    stackView.push(moviesListView)
                 },
                 function(req) {
                     console.log("Failed to get movies: " + req.status)
@@ -40,180 +58,127 @@ Rectangle {
         }
     }
 
-    // FIXME probably a viewstack would be better than this
-    states: [
-        State {
-            name: "LOADING"
-            PropertyChanges { target: loadingView;     visible: true  }
-        },
-        State {
-            name: "MOVIES"
-            PropertyChanges { target: loadingView;     visible: false }
-            PropertyChanges { target: movieDetailView; visible: false }
-            PropertyChanges { target: movieCastView;   visible: false }
-            PropertyChanges { target: movieCrewView;   visible: false }
-            PropertyChanges { target: mediaPlayerView; visible: false }
-            PropertyChanges { target: moviesListView;  visible: true; focus: true }
-        },
-        State {
-            name: "MOVIE"
-            PropertyChanges { target: movieDetailView; visible: false }
-            PropertyChanges { target: movieCastView;   visible: false }
-            PropertyChanges { target: movieCrewView;   visible: false }
-            PropertyChanges { target: mediaPlayerView; visible: false }
-            PropertyChanges { target: movieDetailView; visible: true; focus: true }
-        },
-        State {
-            name: "CAST"
-            PropertyChanges { target: moviesListView;  visible: false }
-            PropertyChanges { target: movieDetailView; visible: false }
-            PropertyChanges { target: movieCrewView;   visible: false }
-            PropertyChanges { target: mediaPlayerView; visible: false }
-            PropertyChanges { target: movieCastView;   visible: true; focus: true }
-        },
-        State {
-            name: "CREW"
-            PropertyChanges { target: moviesListView;  visible: false }
-            PropertyChanges { target: movieDetailView; visible: false }
-            PropertyChanges { target: movieCastView;   visible: false }
-            PropertyChanges { target: mediaPlayerView; visible: false }
-            PropertyChanges { target: movieCrewView;   visible: true; focus: true }
-        },
-        State {
-            name: "MEDIA_PLAYER"
-            PropertyChanges { target: moviesListView;  visible: false }
-            PropertyChanges { target: movieDetailView; visible: false }
-            PropertyChanges { target: movieCastView;   visible: false }
-            PropertyChanges { target: movieCrewView;   visible: false }
-            PropertyChanges { target: mediaPlayerView; visible: true; focus: true }
+    Rectangle {
+        id: loadingView
+        color: "black"
+        Text {
+            text: "Loading..."
+            color: "white"
+            font.pointSize: 18
+            anchors.centerIn: parent
         }
-    ]
+    }
+
+    MoviesListView {
+        id: moviesListView
+        model: moviesModel
+        onMediaSelected: {
+            var movie = moviesListView.model.get(selectedIndex)
+
+            movieCastView.positionViewAtBeginning()
+            movieCrewView.positionViewAtBeginning()
+
+            castModel.clear()
+            crewModel.clear()
+
+            var i
+            var person
+
+            var cast = movie.credits.cast
+            for (i = 0; i < cast.length; i++) {
+                person = cast[i]
+                if (person.profile_path) { // FIXME the delegate should take care of this
+                    castModel.append(person)
+                }
+            }
+
+            var crew = movie.credits.crew
+            for (i = 0; i < crew.length; i++) {
+                person = crew[i]
+                if (person.profile_path) { // FIXME the delegate should take care of this
+                    crewModel.append(person)
+                }
+            }
+
+            stackView.push(movieDetailView)
+        }
+    }
+
+    MediaDetail {
+        id: movieDetailView
+
+        onCastActivated: stackView.push(movieCastView)
+        onCrewActivated: stackView.push(movieCrewView)
+    }
+
+    PersonView {
+        id: movieCastView
+        model: castModel
+        delegate: CastPersonDelegate {}
+
+        Connections {
+            target: castModel
+            onDataChanged: positionViewAtBeginning()
+        }
+    }
+
+    PersonView {
+        id: movieCrewView
+        model: crewModel
+        delegate: CrewPersonDelegate {}
+    }
+
+    MediaPlayerView {
+        id: mediaPlayerView
+    }
 
     Rectangle {
-        anchors.fill:parent;
-
         color: "black"
-
-        Rectangle {
-            id: wrapper
-            width : parent.width
-            height: parent.height
-            anchors.fill:parent
-
-            color: parent.color
-
-            Text {
-                id: loadingView
-                visible: false
-                text: "Loading..."
-                font.pointSize: 18
-                anchors.centerIn: parent;
+        anchors.fill: parent
+        StackView {
+            id: stackView
+            anchors {
+                fill: parent
+                margins: 5
             }
-
-            MediaDetail {
-                id: movieDetailView
-                visible: false
-            }
-
-            ListView {
-
-                signal mediaSelected(int mediaId)
-
-                id: moviesListView
-                visible: false
-                anchors.fill: parent
-                anchors.margins: 5
-                spacing: 5
-//                highlight: Rectangle { color: "lightsteelblue"; radius: 5 }
-                model: moviesModel
-                maximumFlickVelocity: 6000 //Flick speed on Android is slow without this
-                cacheBuffer: 10000
-                smooth: true
-                add: Transition { //scale in animation whenever an item is added to list
-                    NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 400 }
-                    NumberAnimation { property: "scale"; from: 0; to: 1.0; duration: 400 }
-                }
-
-                delegate: MovieDelegate {
-                    id: movieDelegate
-                    onItemClicked: {
-                        // FIXME experimenting with the best way to do this...
-                        moviesListView.currentIndex = index
-                        currentMovie = moviesListView.model.get(index)
-                        main.state = 'MOVIE'
-                        moviesListView.mediaSelected(mediaId)
-                    }
-                    onItemHeld: {
-                        main.state = 'MEDIA_PLAYER'
-                        Movies.putMedia(
-                            0,
-                            mediaId,
-                            function() {
-                                console.log("Successfully played media")
-                            },
-                            function() {
-                                console.log("Failed to play media")
-                            })
-                    }
-                }
-            }
-
-            PersonView {
-                id: movieCastView
-                visible: false
-                delegate: CastPersonDelegate {}
-
-                Connections {
-                    target: main
-                    onCurrentMovieChanged: {
-                        movieCastView.setPeople(currentMovie.credits.cast)
-                    }
-                }
-
-                Keys.onPressed: {
-                    if (visible && focus) {
-                        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
-                            main.state = 'MOVIE'
-                            event.accepted = true
-                        }
-                    }
-                }
-            }
-
-            PersonView {
-                id: movieCrewView
-                visible: false
-                delegate: CrewPersonDelegate {}
-
-                Connections {
-                    target: main
-                    onCurrentMovieChanged: {
-                        movieCrewView.setPeople(currentMovie.credits.crew)
-                    }
-                }
-
-                Keys.onPressed: {
-                    if (visible && focus) {
-                        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
-                            main.state = 'MOVIE'
-                            event.accepted = true
-                        }
-                    }
-                }
-            }
-
-            MediaPlayerView {
-                id: mediaPlayerView
-                visible: false
-            }
+            initialItem: loadingView
         }
+    }
 
-        ListModel {
-            id: moviesModel
-        }
+    ListModel {
+        id: moviesModel
+    }
 
-        Component.onCompleted: {
-            networkDiscovery.discoverServer();
+    ListModel {
+        id: genresModel
+    }
+
+    ListModel {
+        id: yearsModel
+    }
+
+    ListModel {
+        id: castModel
+    }
+
+    ListModel {
+        id: crewModel
+    }
+
+    Component.onCompleted: {
+        networkDiscovery.discoverServer();
+    }
+
+    Keys.onPressed: {
+        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
+            // Depth greater than 2 because the first item is the loading screen
+            if (stackView.depth > 2) {
+                stackView.pop()
+            }
+            else {
+                Qt.quit()
+            }
+            event.accepted = true
         }
     }
 }
