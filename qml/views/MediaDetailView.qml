@@ -19,22 +19,20 @@ import "../js/movies.js" as Movies;
 
 // FIXME need to use titledview
 
-Rectangle {
+Item {
 
     property string baseUrl: "http://image.tmdb.org/t/p/"
 
     property int headerFontSize: 16
 
-    // FIXME can I have a property for the Javascript object "movie" ?
+    // FIXME a better way?
     property int mediaId
+    property variant currentMedia
 
     signal castActivated
     signal crewActivated
 
     height: 62
-
-    color: "#d9d9cf"
-    radius: 10
 
     Rectangle {
         id: contentWrapper
@@ -396,7 +394,7 @@ Rectangle {
                         // FIXME should probably emit a signal instead?
                         Movies.putMedia(
                             0,
-                            mediaId,
+                            currentMedia.id,
                             function() {
                                 stackView.push(mediaPlayerView)
                                 console.log("Successfully played media")
@@ -410,44 +408,8 @@ Rectangle {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    Connections {
-        target: moviesListView
-        onMediaSelected: {
-            // FIXME not sure this is the best way
-            var movie = moviesListView.model.get(selectedIndex)
-            var mediaId = movie.id;
-            // also not sure if i should do web-service here or just use the value from the model!?
-
-            Movies.getMovie(
-                mediaId,
-                function(data) {
-                    var movie = data.movie;
-                    movie.genreNames = Movies.genres(movie.genres);
-                    movieDetailView.setMovie(movie);
-                },
-                function(req) {
-                    console.log("Failed to get movie: " + req.status)
-                })
-        }
+    onCurrentMediaChanged: {
+        setMovie(currentMedia)
     }
 
     function setMovie(movie) {

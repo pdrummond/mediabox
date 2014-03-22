@@ -6,8 +6,6 @@ import MediaBox 1.0
 
 import "js/movies.js" as Movies;
 
-// FIXME click throuhghs are possible due to the overlapping views in the stackview?
-
 ApplicationWindow {
 
     id: main
@@ -19,6 +17,8 @@ ApplicationWindow {
 
     property string mediaboxHost
     property int mediaboxPort
+
+    property variant currentMedia
 
     NetworkDiscovery {
         id: networkDiscovery
@@ -61,8 +61,7 @@ ApplicationWindow {
         }
     }
 
-    Rectangle {
-        id: loadingView
+    property Component loadingView: Rectangle {
         color: "black"
         Text {
             text: "Loading..."
@@ -72,18 +71,13 @@ ApplicationWindow {
         }
     }
 
-    MainMenuView {
-        id: mainMenuView
+    property Component mainMenuView: MainMenuView {
     }
 
-    MoviesListView {
-        id: moviesListView
+    property Component moviesListView: MoviesListView {
         model: moviesModel
         onMediaSelected: {
-            var movie = moviesListView.model.get(selectedIndex)
-
-            movieCastView.positionViewAtBeginning()
-            movieCrewView.positionViewAtBeginning()
+            var movie = moviesModel.get(selectedIndex)
 
             castModel.clear()
             crewModel.clear()
@@ -107,49 +101,37 @@ ApplicationWindow {
                 }
             }
 
+            // FIXME is this the best way
+            currentMedia = movie
+
             stackView.push(movieDetailView)
         }
     }
 
-    MediaDetailView {
-        id: movieDetailView
+    property Component movieDetailView: MediaDetailView {
+        currentMedia: main.currentMedia
         onCastActivated: stackView.push(movieCastView)
         onCrewActivated: stackView.push(movieCrewView)
     }
 
-    PersonView {
-        id: movieCastView
+    property Component movieCastView: PersonView {
         model: castModel
         delegate: CastPersonDelegate {}
-        visible: false
     }
 
-    PersonView {
-        id: movieCrewView
+    property Component movieCrewView: PersonView {
         model: crewModel
         delegate: CrewPersonDelegate {}
-        visible: false
     }
 
-    MediaPlayerView {
-        id: mediaPlayerView
-        visible: false
-    }
-
-    GenresListView {
-        id: movieGenresView
+    property Component movieGenresView: GenresListView {
         model: genresModel
-        visible: false
     }
 
-    AudioEqualizerView {
-        id: audioEqualizerView
-        visible: false
+    property Component audioEqualizerView: AudioEqualizerView {
     }
 
-    VideoAdjustView {
-        id: videoAdjustView
-        visible: false
+    property Component videoAdjustView: VideoAdjustView {
     }
 
     StackView {
@@ -208,6 +190,22 @@ ApplicationWindow {
                 fill: parent
                 margins: 10
             }
+        }
+    }
+
+    // FIXME placeholder only of course
+    menuBar: MenuBar {
+        Menu {
+            title: "File"
+            MenuItem { text: "Open..." }
+            MenuItem { text: "Close" }
+        }
+
+        Menu {
+            title: "Edit"
+            MenuItem { text: "Cut" }
+            MenuItem { text: "Copy" }
+            MenuItem { text: "Paste" }
         }
     }
 
