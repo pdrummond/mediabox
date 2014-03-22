@@ -6,7 +6,6 @@ import QtQuick.Controls 1.1
  */
 Rectangle {
 
-    property int viewMargin: 5
     property int contentMargin: 10
     property int contentPadding: 5
     property int borderSize: 3
@@ -20,10 +19,6 @@ Rectangle {
 
     color: "#d9d9cf"
     radius: 10
-
-    anchors {
-        margins: viewMargin
-    }
 
     Rectangle {
         color: contentBackground

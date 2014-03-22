@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
+import MediaBox 1.0
+
 // FIXME need to pull images from local cache rather than tmdb
 // FIXME the only difference between Cast and Crew delegates is where the text properties come from, can this be combined into one delegate?
 // FIXME show crew department?

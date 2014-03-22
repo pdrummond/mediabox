@@ -1,7 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 
-import "movies.js" as Movies;
+import MediaBox 1.0
+
+// FIXME shouldn't this only be imported once on the main page!?
+// FIXME this relative path is ugly
+import "../js/movies.js" as Movies;
 
 // FIXME whole thing needs to scroll vertically to fit content (maybe don't scroll title)
 // FIXME maybe swipe left/right to show cast/crew/chapters/bookmarks and so on?
@@ -387,7 +391,7 @@ Rectangle {
                     anchors.horizontalCenter: buttonsContainer.horizontalCenter
                     id: playMediaButton
                     text: qsTr("Play")
-                    iconSource: "xxhdpi/ic_action_play.png"
+                    iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_play.png"
                     onClicked: {
                         // FIXME should probably emit a signal instead?
                         Movies.putMedia(

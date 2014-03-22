@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
+import MediaBox 1.0
+
 // FIXME placeholder WIP
 // FIXME need to get the frequencies from the web-service rather than hard-coding here
 

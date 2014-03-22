@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
+import MediaBox 1.0
+
 // FIXME placeholder WIP
 // FIXME ideally the constants would come from the web-services as config rather than being hard-coded here
 

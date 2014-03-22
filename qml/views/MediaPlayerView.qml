@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
-import "movies.js" as Movies;
+import MediaBox 1.0
 
 // FIXME set titleLabel and yearLabel from model
 
@@ -61,7 +61,7 @@ TitledView {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Play")
-                iconSource: "xxhdpi/ic_action_play.png"
+                iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_play.png"
                 onClicked: {
                     Movies.putControl(0, "control", "play", function() {}, function() {})
                 }
@@ -79,7 +79,7 @@ TitledView {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Mute")
-                iconSource: "xxhdpi/ic_action_volume_on.png"
+                iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_volume_on.png"
                 onClicked: {
                     Movies.putControl(0, "volume", "mute", function() {}, function() {})
                 }
@@ -107,7 +107,7 @@ TitledView {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: qsTr("Rewind")
-                        iconSource: "xxhdpi/ic_action_rewind.png"
+                        iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_rewind.png"
                         onClicked: {
                             Movies.putControl(0, "time", "-" + skipDelta, function() {}, function() {})
                         }
@@ -125,7 +125,7 @@ TitledView {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: qsTr("Skip")
-                        iconSource: "xxhdpi/ic_action_fast_forward.png"
+                        iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_fast_forward.png"
                         onClicked: {
                             Movies.putControl(0, "time", "+" + skipDelta, function() {}, function() {})
                         }
@@ -157,7 +157,7 @@ TitledView {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: qsTr("Previous")
-                        iconSource: "xxhdpi/ic_action_previous.png"
+                        iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_previous.png"
                         onClicked: {
                             Movies.putControl(0, "chapter", "previous", function() {}, function() {})
                         }
@@ -175,7 +175,7 @@ TitledView {
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: qsTr("Next")
-                        iconSource: "xxhdpi/ic_action_next.png"
+                        iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_next.png"
                         onClicked: {
                             Movies.putControl(0, "chapter", "next", function() {}, function() {})
                         }
@@ -196,7 +196,7 @@ TitledView {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: qsTr("Stop")
-                iconSource: "xxhdpi/ic_action_stop.png"
+                iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_stop.png"
                 onClicked: {
                     Movies.putControl(0, "control", "stop", function() {}, function() {})
                 }

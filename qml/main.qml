@@ -1,18 +1,21 @@
 import QtQuick 2.1
 import QtQuick.Controls 1.1
+import QtQuick.Controls.Styles 1.0
 
-import NetworkDiscovery 1.0
+import MediaBox 1.0
 
-import "movies.js" as Movies;
+import "js/movies.js" as Movies;
 
-Rectangle {
+// FIXME click throuhghs are possible due to the overlapping views in the stackview?
+
+ApplicationWindow {
 
     id: main
 
     width: 1080
     height: 1100
 
-    focus: true
+    title: "MediaBox"
 
     property string mediaboxHost
     property int mediaboxPort
@@ -50,7 +53,7 @@ Rectangle {
                         movie.genreNames = Movies.genres(movie.genres);
                         moviesModel.append(movie);
                     }
-                    stackView.push(moviesListView)
+                    stackView.push(mainMenuView)
                 },
                 function(req) {
                     console.log("Failed to get movies: " + req.status)
@@ -67,6 +70,10 @@ Rectangle {
             font.pointSize: 18
             anchors.centerIn: parent
         }
+    }
+
+    MainMenuView {
+        id: mainMenuView
     }
 
     MoviesListView {
@@ -104,9 +111,8 @@ Rectangle {
         }
     }
 
-    MediaDetail {
+    MediaDetailView {
         id: movieDetailView
-
         onCastActivated: stackView.push(movieCastView)
         onCrewActivated: stackView.push(movieCrewView)
     }
@@ -115,33 +121,93 @@ Rectangle {
         id: movieCastView
         model: castModel
         delegate: CastPersonDelegate {}
-
-        Connections {
-            target: castModel
-            onDataChanged: positionViewAtBeginning()
-        }
+        visible: false
     }
 
     PersonView {
         id: movieCrewView
         model: crewModel
         delegate: CrewPersonDelegate {}
+        visible: false
     }
 
     MediaPlayerView {
         id: mediaPlayerView
+        visible: false
     }
 
-    Rectangle {
-        color: "black"
+    GenresListView {
+        id: movieGenresView
+        model: genresModel
+        visible: false
+    }
+
+    AudioEqualizerView {
+        id: audioEqualizerView
+        visible: false
+    }
+
+    VideoAdjustView {
+        id: videoAdjustView
+        visible: false
+    }
+
+    StackView {
+        id: stackView
         anchors.fill: parent
-        StackView {
-            id: stackView
+        focus: true
+        initialItem: loadingView
+
+        Keys.onReleased: {
+            if (event.key === Qt.Key_Back || (event.key === Qt.Key_Left && (event.modifiers & Qt.AltModifier))) {
+                event.accepted = true
+                if (stackView.depth > 2) {
+                    stackView.pop()
+                }
+                else {
+                    Qt.quit() // FIXME weather example does not quit?
+                }
+            }
+        }
+    }
+
+    // FIXME obviously placeholder for now
+    statusBar: StatusBar {
+        width: parent.width
+        opacity: label.text !== "" ? 1 : 0
+        height: label.text !== "" ? 65 * ApplicationInfo.ratio : 0
+
+        Behavior on height { NumberAnimation {easing.type: Easing.OutSine}}
+        Behavior on opacity { NumberAnimation {}}
+
+        style: StatusBarStyle {
+            padding { left: 0; right: 0 ; top: 0 ; bottom: 0}
+            property Component background: Rectangle {
+//                implicitHeight: 65 * ApplicationInfo.ratio
+                implicitHeight: 100
+                implicitWidth: root.width
+                color: ApplicationInfo.colors.smokeGray
+                Rectangle {
+                    width: parent.width
+                    height: 1
+                    color: Qt.darker(parent.color, 1.5)
+                }
+                Rectangle {
+                    y: 1
+                    width: parent.width
+                    height: 1
+                    color: "white"
+                }
+            }
+        }
+        Label {
+            font.pointSize: 16
+            text: "Now playing: Blade Runner"
+            color: "black"
             anchors {
                 fill: parent
-                margins: 5
+                margins: 10
             }
-            initialItem: loadingView
         }
     }
 
@@ -167,18 +233,5 @@ Rectangle {
 
     Component.onCompleted: {
         networkDiscovery.discoverServer();
-    }
-
-    Keys.onPressed: {
-        if (event.key === Qt.Key_Back || event.key === Qt.Key_Backspace) {
-            // Depth greater than 2 because the first item is the loading screen
-            if (stackView.depth > 2) {
-                stackView.pop()
-            }
-            else {
-                Qt.quit()
-            }
-            event.accepted = true
-        }
     }
 }

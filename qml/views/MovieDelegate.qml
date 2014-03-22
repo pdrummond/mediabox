@@ -1,6 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.1
 
+import MediaBox 1.0
+
 // FIXME need to pull images from local cache rather than tmdb
 
 /**
@@ -178,4 +180,25 @@ Rectangle {
 //        }
 
     }
+
+//    GestureMouseArea {
+
+//        anchors.fill: parent
+
+//        onTap: {
+//            console.log("TAP")
+//        }
+
+//        onHold: {
+//            console.log("HOLD")
+//        }
+
+//        onSwipeLeft: {
+//            console.log("SWIPE LEFT")
+//        }
+
+//        onSwipeRight: {
+//            console.log("SWIPE RIGHT")
+//        }
+//    }
 }
