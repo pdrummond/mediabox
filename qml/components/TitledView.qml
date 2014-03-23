@@ -17,8 +17,7 @@ Rectangle {
     property alias header: headerContainer.data
     property alias content: contentContainer.data
 
-    color: "#d9d9cf"
-    radius: 10
+    color: "white"
 
     Rectangle {
         color: contentBackground
