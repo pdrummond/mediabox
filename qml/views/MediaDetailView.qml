@@ -19,6 +19,8 @@ import "../js/movies.js" as Movies;
 
 // FIXME need to use titledview
 
+// FIXME need to stop e.g. double-taps spawning two person views on top of each other
+
 Item {
 
     property string baseUrl: "http://image.tmdb.org/t/p/"
@@ -31,6 +33,7 @@ Item {
 
     signal castActivated
     signal crewActivated
+    signal playActivated
 
     height: 62
 
@@ -40,7 +43,7 @@ Item {
         radius: 6
         anchors {
             fill: parent
-            margins: 10
+//            margins: 10
         }
 
         Rectangle {
@@ -380,7 +383,6 @@ Item {
                     right: parent.right
                 }
 
-                // FIXME this should be moved to a signal so that the main.qml can manage it?
                 Button {
                     width: 400
                     height: 200
@@ -390,19 +392,7 @@ Item {
                     id: playMediaButton
                     text: qsTr("Play")
                     iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_play.png"
-                    onClicked: {
-                        // FIXME should probably emit a signal instead?
-                        Movies.putMedia(
-                            0,
-                            currentMedia.id,
-                            function() {
-                                stackView.push(mediaPlayerView)
-                                console.log("Successfully played media")
-                            },
-                            function() {
-                                console.log("Failed to play media")
-                            })
-                    }
+                    onClicked: playActivated()
                 }
             }
         }

@@ -6,9 +6,14 @@ import MediaBox 1.0
 
 import "js/movies.js" as Movies;
 
+// FIXME need to replace the menu and status bar placeholders with something useful (e.g. at least search and genres should be easily available)
+
 ApplicationWindow {
 
     id: main
+
+//    color: "#d9d9cf"
+    color: "silver"
 
     width: 1080
     height: 1100
@@ -112,6 +117,18 @@ ApplicationWindow {
         currentMedia: main.currentMedia
         onCastActivated: stackView.push(movieCastView)
         onCrewActivated: stackView.push(movieCrewView)
+        onPlayActivated: {
+            Movies.putMedia(
+                0,
+                currentMedia.id,
+                function() {
+                    stackView.push(mediaPlayerView)
+                    console.log("Successfully played media")
+                },
+                function() {
+                    console.log("Failed to play media")
+                })
+        }
     }
 
     property Component movieCastView: PersonView {
@@ -132,6 +149,9 @@ ApplicationWindow {
     }
 
     property Component videoAdjustView: VideoAdjustView {
+    }
+
+    property Component mediaPlayerView: MediaPlayerView {
     }
 
     StackView {
@@ -215,6 +235,33 @@ ApplicationWindow {
 
     ListModel {
         id: genresModel
+        onDataChanged: {
+            // FIXME code dupe, and is this the best way?
+
+            var genres = [];
+            for (var i = 0; i < count; i++) {
+                var g = get(i)
+                if (g.toggled) {
+                    genres.push(g.genre)
+                }
+            }
+
+            Movies.getMovies(
+                {genres: genres},
+                function(data) {
+//                    moviesListView.positionViewAtBeginning()
+                    moviesModel.clear();
+                    for (var i = 0; i < data.entries.length; i++) {
+                        var movie = data.entries[i].movie;
+                        movie.genreNames = Movies.genres(movie.genres);
+                        moviesModel.append(movie);
+                    }
+                },
+                function(req) {
+                    console.log("Failed to get movies: " + req.status)
+                })
+
+        }
     }
 
     ListModel {
