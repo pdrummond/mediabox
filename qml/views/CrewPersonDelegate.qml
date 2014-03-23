@@ -18,8 +18,7 @@ Rectangle {
     // FIXME is there a better way? this is imageHeight + 2 * borderWidth + 2 * margins
     height: 278 + 6 + 10
 
-    color: "#d9d9cf"
-    radius: 10
+    color: "white"
 
     RowLayout {
         id: content

@@ -23,8 +23,7 @@ Rectangle {
 
     width: parent.width
     height: artwork.height + (2 * artwork.anchors.margins)
-    color: "#d9d9cf"
-    radius: 10
+    color: "white"
 
     LineBorderedImage {
         id: artwork
@@ -53,7 +52,9 @@ Rectangle {
             top: parent.top;
             right: parent.right
             bottom: parent.bottom
-            margins: 10
+            leftMargin: 10
+            rightMargin: 10
+            bottomMargin: 10
         }
 
         Rectangle {
@@ -91,7 +92,7 @@ Rectangle {
 
             Rectangle {
                 id: headerBorder
-                color: "silver"
+                color: "#e0e0e0"
                 anchors {
                     top: titleLabel.bottom
                     left: parent.left
@@ -128,13 +129,15 @@ Rectangle {
                 left: parent.left
                 right: parent.right
                 bottom: parent.bottom
-                margins: 5
+                leftMargin: 5
+                rightMargin: 5
+                topMargin: 5
             }
             height: runtimeLabel.height + footerBorder.height
 
             Rectangle {
                 id: footerBorder
-                color: "silver"
+                color: "#e0e0e0"
                 anchors {
                     bottom: runtimeLabel.top
                     left: parent.left

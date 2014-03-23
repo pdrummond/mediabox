@@ -7,7 +7,7 @@ ListView {
     signal mediaSelected(int selectedIndex)
 
     clip: true
-    spacing: 5
+    spacing: 3
     maximumFlickVelocity: 6000 //Flick speed on Android is slow without this
     cacheBuffer: 10000
     smooth: true

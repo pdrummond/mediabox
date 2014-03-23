@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.1
 import MediaBox 1.0
 
 // FIXME need to pull images from local cache rather than tmdb
+// FIXME a lot of commonality here with the other delegate so should make a common component
 
 Rectangle {
 
@@ -15,8 +16,7 @@ Rectangle {
     // FIXME is there a better way? this is imageHeight + 2 * borderWidth + 2 * margins
     height: 278 + 6 + 10
 
-    color: "#d9d9cf"
-    radius: 10
+    color: "white"
 
     RowLayout {
         id: content
