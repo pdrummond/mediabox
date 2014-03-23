@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.1
 
 import MediaBox 1.0
 
+import "../js/movies.js" as Movies
+
 // FIXME set titleLabel and yearLabel from model
 
 TitledView {
