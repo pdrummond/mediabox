@@ -141,6 +141,5 @@ TitledView {
             minimum: minimumAmp
             maximum: maximumAmp
         }
-
     }
 }
