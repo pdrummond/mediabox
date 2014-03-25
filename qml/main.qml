@@ -6,6 +6,7 @@ import MediaBox 1.0
 
 import "js/movies.js" as Movies;
 
+// FIXME need to refactor the Rectangles of the individual page views to Item
 // FIXME need to replace the menu and status bar placeholders with something useful (e.g. at least search and genres should be easily available)
 
 ApplicationWindow {
@@ -216,16 +217,14 @@ ApplicationWindow {
     // FIXME placeholder only of course
     menuBar: MenuBar {
         Menu {
-            title: "File"
-            MenuItem { text: "Open..." }
-            MenuItem { text: "Close" }
-        }
-
-        Menu {
-            title: "Edit"
-            MenuItem { text: "Cut" }
-            MenuItem { text: "Copy" }
-            MenuItem { text: "Paste" }
+            title: "Movies"
+            MenuItem {
+                text: "Genres..."
+                onTriggered: {
+                    // FIXME need to change the menu etc...
+                    stackView.push(movieGenresView)
+                }
+            }
         }
     }
 
