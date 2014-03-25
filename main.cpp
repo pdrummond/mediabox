@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Caprica");
     app.setApplicationName("MediaBox");
 
-    // @uri MediaBox
     const char *uri = "MediaBox";
+    // @uri MediaBox
 
     qmlRegisterType<NetworkDiscovery>(uri, 1, 0, "NetworkDiscovery");
 
