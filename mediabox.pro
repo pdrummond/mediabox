@@ -21,6 +21,7 @@ APP_FILES +=                                           \
     $$PWD/qml/components/StandardSlider.qml            \
     $$PWD/qml/components/TitledView.qml                \
     $$PWD/qml/views/AudioEqualizerView.qml             \
+    $$PWD/qml/views/BasePage.qml                       \
     $$PWD/qml/views/CastPersonDelegate.qml             \
     $$PWD/qml/views/CrewPersonDelegate.qml             \
     $$PWD/qml/views/GenresListView.qml                 \
@@ -55,7 +56,7 @@ APP_FILES +=                                           \
 
 OTHER_FILES +=                  \
     android/AndroidManifest.xml \
-    $$APP_FILES
+    $$APP_FILES \
 
 GENERATED_RESOURCE_FILE = $$OUT_PWD/mediabox.qrc
 
