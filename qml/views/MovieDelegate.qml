@@ -3,16 +3,12 @@ import QtQuick.Controls 1.1
 
 import MediaBox 1.0
 
-// FIXME need to pull images from local cache rather than tmdb
-
 /**
  * Delegate for rendering a movie in a list.
  */
 Rectangle {
 
     id: container
-
-    property string baseUrl: "http://image.tmdb.org/t/p/"
 
     property int headerFontSize: 16
     property int contentFontSize: 14
@@ -36,7 +32,7 @@ Rectangle {
         color: "black"
         borderWidth: 3
         radius: 6
-        imageSource: baseUrl + "w342" + poster_path
+        imageSource: "http://" + main.mediaboxHost + ":" + main.mediaboxPort + "/mediabox/movie/" + id + "/poster"
         imageWidth: 342
         imageHeight: 500
     }

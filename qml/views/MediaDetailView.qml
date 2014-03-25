@@ -23,8 +23,6 @@ import "../js/movies.js" as Movies;
 
 Item {
 
-    property string baseUrl: "http://image.tmdb.org/t/p/"
-
     property int headerFontSize: 16
 
     // FIXME a better way?
@@ -383,6 +381,7 @@ Item {
                     right: parent.right
                 }
 
+                // FIXME this should be moved to a signal so that the main.qml can manage it?
                 Button {
                     width: 400
                     height: 200
@@ -410,7 +409,7 @@ Item {
         titleLabel.text = movie.title;
         yearLabel.text = '(' + movie.release_date.substring(0,4) + ')';
 
-        artwork.imageSource = baseUrl + "w1280" + movie.backdrop_path
+        artwork.imageSource = "http://" + main.mediaboxHost + ":" + main.mediaboxPort + "/mediabox/movie/" + mediaId + "/backdrop";
 
         overviewLabel.text = movie.overview;
         genresLabel.text = movie.genreNames;

@@ -11,8 +11,6 @@ import MediaBox 1.0
 
 Rectangle {
 
-    property string baseUrl: "http://image.tmdb.org/t/p/"
-
     width: parent.width
 
     // FIXME is there a better way? this is imageHeight + 2 * borderWidth + 2 * margins
@@ -31,7 +29,7 @@ Rectangle {
             color: "black"
             borderWidth: 3
             radius: 6
-            imageSource: baseUrl + "w185" + profile_path
+            imageSource: "http://" + main.mediaboxHost + ":" + mediaboxPort + "/mediabox/person/" + id + "/picture"
             imageWidth: 185
             imageHeight: 278
             Layout.alignment: Qt.AlignTop
