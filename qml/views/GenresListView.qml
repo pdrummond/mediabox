@@ -32,7 +32,8 @@ ListView {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                view.model.setProperty(index, "toggled", !view.model.get(index).toggled);
+                interop.playKeyClick()
+                view.model.setProperty(index, "toggled", !view.model.get(index).toggled)
             }
             onPressAndHold: {
                 for (var i = 0; i < genresModel.count; i++) {

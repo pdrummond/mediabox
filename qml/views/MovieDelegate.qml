@@ -171,6 +171,7 @@ Rectangle {
 
         anchors.fill: parent
         onClicked: {
+            interop.playKeyClick()
             itemClicked(id)
             container.ListView.view.currentIndex = index
         }

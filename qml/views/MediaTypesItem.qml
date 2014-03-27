@@ -2,6 +2,8 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 
+import MediaBox 1.0
+
 Rectangle {
 
     property alias text: cellText.text
@@ -24,6 +26,9 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: itemClicked()
+        onClicked: {
+            interop.playKeyClick()
+            itemClicked()
+        }
     }
 }

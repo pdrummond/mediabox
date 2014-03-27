@@ -26,6 +26,10 @@ ApplicationWindow {
 
     property variant currentMedia
 
+    AndroidInterop {
+        id: interop
+    }
+
     NetworkDiscovery {
         id: networkDiscovery
         broadcastAddress: "192.168.0.255" // FIXME config, or can this be determined at run-time?
