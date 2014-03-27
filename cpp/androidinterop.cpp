@@ -1,6 +1,5 @@
 #include "androidinterop.h"
 
-#include <QAndroidJniEnvironment>
 #include <QAndroidJniObject>
 
 const char* AndroidInterop::JAVA_CLASS_NAME = "uk/co/caprica/mediabox/android/MediaBoxActivity";
