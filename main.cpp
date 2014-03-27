@@ -2,6 +2,7 @@
 #include <QtQuick/QQuickWindow>
 #include <QtQml>
 
+#include "androidinterop.h"
 #include "networkdiscovery.h"
 
 static const char* qmlComponents[] = {
@@ -34,6 +35,7 @@ int main(int argc, char *argv[])
     const char *uri = "MediaBox";
     // @uri MediaBox
 
+    qmlRegisterType<AndroidInterop>(uri, 1, 0, "AndroidInterop");
     qmlRegisterType<NetworkDiscovery>(uri, 1, 0, "NetworkDiscovery");
 
     for (int i = 0; i < int(sizeof(qmlComponents)/sizeof(qmlComponents[0])); i++) {

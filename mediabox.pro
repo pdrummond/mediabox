@@ -1,18 +1,20 @@
 cache()
 
 TEMPLATE = app
-QT      += qml quick gui network
+QT      += qml quick gui network androidextras
 TARGET   = MediaBox
 
 INCLUDEPATH +=                                         \
     $$PWD/cpp
 
 HEADERS +=                                             \
-    $$PWD/cpp/networkdiscovery.h
+    $$PWD/cpp/networkdiscovery.h                       \
+    $$PWD/cpp/androidinterop.h
 
 SOURCES +=                                             \
     $$PWD/main.cpp                                     \
-    $$PWD/cpp/networkdiscovery.cpp
+    $$PWD/cpp/networkdiscovery.cpp                     \
+    $$PWD/cpp/androidinterop.cpp
 
 APP_FILES +=                                           \
     $$PWD/qml/main.qml                                 \
@@ -54,9 +56,12 @@ APP_FILES +=                                           \
     $$PWD/qml/images/xxhdpi/ic_action_volume_on.png    \
     $$PWD/qml/images/xxhdpi/ic_drawer.png
 
+APP_FILES +=                                                         \
+    android/src/uk/co/caprica/mediabox/android/MediaBoxActivity.java
+
 OTHER_FILES +=                  \
     android/AndroidManifest.xml \
-    $$APP_FILES \
+    $$APP_FILES
 
 GENERATED_RESOURCE_FILE = $$OUT_PWD/mediabox.qrc
 
