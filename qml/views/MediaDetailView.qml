@@ -182,7 +182,10 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: castActivated()
+                onClicked: {
+                    interop.playKeyClick()
+                    castActivated()
+                }
             }
         }
 
@@ -245,7 +248,10 @@ Item {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: crewActivated()
+                onClicked: {
+                    interop.playKeyClick()
+                    crewActivated()
+                }
             }
         }
 
