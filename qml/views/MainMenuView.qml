@@ -1,5 +1,4 @@
-import QtQuick 2.0
-//import QtQuick.Controls 1.1
+import QtQuick 2.2
 import QtQuick.Layouts 1.1
 
 // FIXME this is just a rough and ready placeholder used to test access to the various screens

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.2
 
 /**
  * An image with a simple line border.
