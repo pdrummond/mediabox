@@ -27,10 +27,10 @@ APP_FILES +=                                           \
     $$PWD/qml/views/CastPersonDelegate.qml             \
     $$PWD/qml/views/CrewPersonDelegate.qml             \
     $$PWD/qml/views/GenresListView.qml                 \
-    $$PWD/qml/views/MainMenuView.qml                   \
     $$PWD/qml/views/MediaDetailView.qml                \
     $$PWD/qml/views/MediaPlayerView.qml                \
-    $$PWD/qml/views/MediaTypesItem.qml                 \
+    $$PWD/qml/views/MenuItemView.qml                   \
+    $$PWD/qml/views/MenuView.qml                       \
     $$PWD/qml/views/MovieDelegate.qml                  \
     $$PWD/qml/views/MoviesListView.qml                 \
     $$PWD/qml/views/VideoAdjustView.qml

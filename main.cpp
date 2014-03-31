@@ -17,10 +17,10 @@ static const char* qmlViews[] = {
     "CastPersonDelegate",
     "CrewPersonDelegate",
     "GenresListView",
-    "MainMenuView",
     "MediaDetailView",
     "MediaPlayerView",
-    "MediaTypesItem",
+    "MenuItemView",
+    "MenuView",
     "MovieDelegate",
     "MoviesListView",
     "VideoAdjustView"

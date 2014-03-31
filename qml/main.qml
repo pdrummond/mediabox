@@ -81,7 +81,7 @@ ApplicationWindow {
         }
     }
 
-    property Component mainMenuView: MainMenuView {
+    property Component mainMenuView: MenuView {
     }
 
     property Component moviesListView: MoviesListView {
@@ -180,6 +180,8 @@ ApplicationWindow {
 
     // FIXME obviously placeholder for now
     statusBar: StatusBar {
+        visible: false
+
         width: parent.width
         opacity: label.text !== "" ? 1 : 0
         height: label.text !== "" ? 65 * ApplicationInfo.ratio : 0
@@ -227,6 +229,20 @@ ApplicationWindow {
                 onTriggered: {
                     // FIXME need to change the menu etc...
                     stackView.push(movieGenresView)
+                }
+            }
+            MenuItem {
+                text: "Audio..."
+                onTriggered: {
+                    // FIXME need to change the menu etc...
+                    stackView.push(audioEqualizerView)
+                }
+            }
+            MenuItem {
+                text: "Video..."
+                onTriggered: {
+                    // FIXME need to change the menu etc...
+                    stackView.push(videoAdjustView)
                 }
             }
         }
