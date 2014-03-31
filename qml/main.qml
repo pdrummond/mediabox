@@ -184,7 +184,7 @@ ApplicationWindow {
 
         width: parent.width
         opacity: label.text !== "" ? 1 : 0
-        height: label.text !== "" ? 65 * ApplicationInfo.ratio : 0
+//        height: label.text !== "" ? 65 * ApplicationInfo.ratio : 0
 
         Behavior on height { NumberAnimation {easing.type: Easing.OutSine}}
         Behavior on opacity { NumberAnimation {}}
@@ -210,6 +210,7 @@ ApplicationWindow {
             }
         }
         Label {
+            id: label
             font.pointSize: 16
             text: "Now playing: Blade Runner"
             color: "black"
