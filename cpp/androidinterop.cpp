@@ -12,12 +12,10 @@ void AndroidInterop::playKeyClick() {
 }
 
 void AndroidInterop::playSoundEffect(int type) {
-    // FIXME for now we have to have an object return type to prevent SIGSEGV on return or so it seems
-    //       i.e. the JNI signature should be "(I)V" ?
-    QAndroidJniObject::callStaticObjectMethod(
+    QAndroidJniObject::callStaticMethod<void>(
         JAVA_CLASS_NAME,
         "playSoundEffect",
-        "(I)Ljava/lang/String;",
+        "(I)V",
         type
     );
 }

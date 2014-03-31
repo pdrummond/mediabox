@@ -40,12 +40,10 @@ public class MediaBoxActivity extends org.qtproject.qt5.android.bindings.QtActiv
      *
      * @param type type of sound effect to play
      */
-    public static String playSoundEffect(int type) {
+    public static void playSoundEffect(int type) {
         Log.v(TAG, "[>] playSoundEffect(type=" + type + ")");
         AudioManager audioManager = (AudioManager) instance.getSystemService(Context.AUDIO_SERVICE);
         audioManager.playSoundEffect(type);
         Log.v(TAG, "[<] playSoundEffect()");
-        // FIXME for now we have to return something otherwise a sigsegv after returning
-        return "";
     }
 }
