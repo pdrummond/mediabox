@@ -12,10 +12,12 @@ void AndroidInterop::playKeyClick() {
 }
 
 void AndroidInterop::playSoundEffect(int type) {
+#ifdef Q_OS_ANDROID
     QAndroidJniObject::callStaticMethod<void>(
         JAVA_CLASS_NAME,
         "playSoundEffect",
         "(I)V",
         type
     );
+#endif
 }
