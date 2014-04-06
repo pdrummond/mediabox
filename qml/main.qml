@@ -123,6 +123,7 @@ ApplicationWindow {
         onCastActivated: stackView.push(movieCastView)
         onCrewActivated: stackView.push(movieCrewView)
         onPlayActivated: {
+            interop.playKeyClick()
             Movies.putMedia(
                 0,
                 currentMedia.id,
