@@ -7,23 +7,12 @@ import MediaBox 1.0
 // FIXME this relative path is ugly
 import "../js/movies.js" as Movies;
 
-// FIXME whole thing needs to scroll vertically to fit content (maybe don't scroll title)
-// FIXME maybe swipe left/right to show cast/crew/chapters/bookmarks and so on?
-
-// FIXME title needs more padding like the cast/crew (but no border!)
-// FIXME overview bottom border is not quite right wrt the top border
-
 // FIXME need to defer presentation/transition until image loaded or something
 
-// Things i learned - to have a margin, you must have an anchor! seems obvious in hindsight
-
-// FIXME need to use titledview
-
-// FIXME need to stop e.g. double-taps spawning two person views on top of each other
-
-Item {
+TitledView {
 
     property int headerFontSize: 16
+    property int overviewFontSize: 14
 
     // FIXME a better way?
     property int mediaId
@@ -33,302 +22,172 @@ Item {
     signal crewActivated
     signal playActivated
 
-    height: 62
+    header: Rectangle {
 
-    Rectangle {
-        id: contentWrapper
-        color: "white"
-        radius: 6
-        anchors {
-            fill: parent
-//            margins: 10
-        }
+        width: parent.width
+        height: childrenRect.height
 
-        Rectangle {
-            id: headerContainer
-            color: parent.color
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: parent.top
-                margins: 5
-            }
-            height: titleLabel.height + headerBorder.height
-
-            Label {
-                id: titleLabel
-                width: parent.width - yearLabel.width
-                elide: "ElideRight"
-                font {
-                    pointSize: headerFontSize
-                    bold: true
-                }
-            }
-
-            Label {
-                id: yearLabel
-                anchors.left: titleLabel.right
-                horizontalAlignment: Text.AlignRight
-                font {
-                    pointSize: headerFontSize
-                    bold: true
-                }
-            }
-
-            Rectangle {
-                id: headerBorder
-                color: "silver"
-                anchors {
-                    top: titleLabel.bottom
-                    left: parent.left
-                    right: parent.right
-                }
-                height: 3
+        Label {
+            id: titleLabel
+            width: parent.width - yearLabel.width
+            elide: "ElideRight"
+            font {
+                pointSize: headerFontSize
+                bold: true
             }
         }
+
+        Label {
+            id: yearLabel
+            anchors.left: titleLabel.right
+            horizontalAlignment: Text.AlignRight
+            font {
+                pointSize: headerFontSize
+                bold: true
+            }
+        }
+    }
+
+    content: Rectangle {
+        id: contentWrapperNew
+        anchors.fill: parent
 
         Rectangle {
             id: artworkContainer
             anchors {
                 left: parent.left
                 right: parent.right
-                top: headerContainer.bottom
-                margins: 5
+                top: parent.top
             }
             width: parent.width
             height: artwork.height
 
             LineBorderedImage {
-                anchors.fill: parent
                 id: artwork
+                anchors.fill: parent
                 color: "black"
                 borderWidth: 3
                 radius: 6
-//                imageSource: baseUrl + "w1280" + backdrop_path
                 imageWidth: parent.width - (2 * borderWidth) // FIXME this adjustment should not be needed
                 imageHeight: 500
                 fillMode: Image.PreserveAspectCrop
             }
         }
 
-        Rectangle {
-            id: contentTopBorder
-            color: "silver"
+        LabelValueButton {
+            id: castView
             anchors {
+                left: parent.left
+                right: parent.right
                 top: artworkContainer.bottom
-                left: parent.left
-                right: parent.right
-                margins: 5
+                topMargin: 10
             }
-            height: 3
+            label: qsTr("Starring")
+            onClicked: castActivated()
         }
 
-        Rectangle {
-            id: castWrapper
-            color: "black"
-            radius: 6
-
+        LabelValueButton {
+            id: crewView
             anchors {
                 left: parent.left
                 right: parent.right
-                top: contentTopBorder.bottom
-                margins: 5
+                top: castView.bottom
+                topMargin: 10
             }
-
-            height: castContainer.height + (2 * castContainer.anchors.margins)
-
-            Rectangle {
-                id: castContainer
-                radius: 6
-                color: "white"
-                anchors {
-                    top: castWrapper.top
-                    left: parent.left
-                    right: parent.right
-                    margins: 2
-                }
-                height: starringLabel.height + (2 * starringLabel.anchors.margins)
-
-                Label {
-                    id: starringLabel
-
-                    anchors {
-                        left: castContainer.left
-                        top: castContainer.top
-                        margins: 10
-                    }
-
-                    text: qsTr("Starring")
-
-                    font.pointSize: headerFontSize
-                }
-
-                Label {
-                    id: castLabel
-                    anchors {
-                        top: castContainer.top
-                        left: starringLabel.right
-                        right: parent.right
-                        margins: 10
-                    }
-                    elide: Text.ElideRight
-                    width: parent.width - (starringLabel.width + 2 * starringLabel.anchors.margins)
-                    font {
-                        pointSize: headerFontSize
-                        bold: true
-                    }
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    interop.playKeyClick()
-                    castActivated()
-                }
-            }
-        }
-
-        Rectangle {
-            id: crewWrapper
-            color: "black"
-            radius: 6
-
-            anchors {
-                left: parent.left
-                right: parent.right
-                top: castWrapper.bottom
-                margins: 5
-            }
-
-            height: crewContainer.height + (2 * crewContainer.anchors.margins)
-
-            Rectangle {
-                id: crewContainer
-                radius: 6
-                color: "white"
-                anchors {
-                    top: crewWrapper.top
-                    left: parent.left
-                    right: parent.right
-                    margins: 2
-                }
-                height: directedByLabel.height + (2 * directedByLabel.anchors.margins)
-
-                Label {
-                    id: directedByLabel
-
-                    anchors {
-                        left: crewContainer.left
-                        top: crewContainer.top
-                        margins: 10
-                    }
-
-                    text: qsTr("Directed by")
-
-                    font.pointSize: headerFontSize
-                }
-
-                Label {
-                    id: directorLabel
-                    anchors {
-                        top: crewContainer.top
-                        left: directedByLabel.right
-                        right: parent.right
-                        margins: 10
-                    }
-                    elide: Text.ElideRight
-                    width: parent.width - (directedByLabel.width + 2 * directedByLabel.anchors.margins)
-                    font {
-                        pointSize: headerFontSize
-                        bold: true
-                    }
-                }
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    interop.playKeyClick()
-                    crewActivated()
-                }
-            }
+            label: qsTr("Directed by")
+            onClicked: crewActivated()
         }
 
         Rectangle {
             id: overviewTopBorder
-            color: "silver"
             anchors {
-                top: crewWrapper.bottom
                 left: parent.left
                 right: parent.right
-                margins: 5
+                top: crewView.bottom
+                topMargin: 10
             }
             height: 3
+            color: "silver"
         }
 
         Rectangle {
-            id: overviewWrapper
-            width: parent.width
-            height: overviewContainer.height + (2 * overviewContainer.anchors.margins)
+            id: overviewContainer
+            color: "white"
             anchors {
                 left: parent.left
                 right: parent.right
                 top: overviewTopBorder.bottom
-                margins: 10
+                bottom: overviewBottomBorder.top
             }
+            clip: true
 
-            Rectangle {
-                id: overviewContainer
-
-                radius: 6
-                color: "white"
-                anchors {
-                    top: overviewWrapper.top
-                    left: parent.left
-                    right: parent.right
-                    margins: 20
-                }
-                height: overviewLabel.height //+ (2 * overviewLabel.anchors.margins)
+            // FIXME the width of the flickable text should be reduced to accommodate the scrollbar *when it is visible*, or should have some margin to leave space for it
+            Flickable {
+                id: overviewFlickable
+                anchors.fill: parent
+                flickableDirection: Flickable.VerticalFlick
+                boundsBehavior: Flickable.StopAtBounds
+                contentWidth: overviewLabel.width
+                contentHeight: overviewLabel.height
 
                 Label {
                     id: overviewLabel
-                    width: parent.width
-    //                height: parent.parent.height - (titleLabel.height + backdropImage.height + directionWrapper.height + castWrapper.height + genreWrapper.height + buttonsWrapper.height) // FIXME all the margins too
-                    elide: Text.ElideRight
+                    width: overviewContainer.width
                     wrapMode: Text.Wrap
-                    font.pointSize: headerFontSize
+                    font.pointSize: overviewFontSize
                 }
+            }
+
+            Rectangle {
+                id: scrollbar
+                color: "#60000000"
+                anchors.right: overviewFlickable.right
+                y: overviewFlickable.visibleArea.yPosition * overviewFlickable.height
+                width: 10
+                height: overviewFlickable.visibleArea.heightRatio * overviewFlickable.height
+                visible: overviewFlickable.height < overviewFlickable.contentItem.height
             }
         }
 
         Rectangle {
             id: overviewBottomBorder
-            color: "silver"
             anchors {
-                top: overviewWrapper.bottom
                 left: parent.left
                 right: parent.right
-                margins: 5
+                bottom: bottomInfoBorder.top
+                bottomMargin: 10
             }
             height: 3
+            color: "silver"
         }
 
         Rectangle {
-            id: genresWrapper
+            id: bottomInfoBorder
             anchors {
-                top: overviewBottomBorder.bottom
                 left: parent.left
                 right: parent.right
-                margins: 5
+                bottom: bottomInfoContainer.top
             }
-            height: genresLabel.height + (2 * genresLabel.anchors.margins)
+            height: 3
+            color: "silver"
+        }
+
+        Rectangle {
+            id: bottomInfoContainer
+            anchors {
+                left: parent.left
+                right: parent.right
+                bottom: buttonContainerBorder.top
+            }
+            height: childrenRect.height
 
             Label {
                 id: runtimeLabel
                 anchors {
                     top: parent.top
                     left: parent.left
+                    leftMargin: 5
+                    rightMargin: 5
                 }
                 font {
                     pointSize: headerFontSize
@@ -357,48 +216,36 @@ Item {
         }
 
         Rectangle {
-            id: genresBottomBorder
-            color: "silver"
+            id: buttonContainerBorder
             anchors {
-                top: genresWrapper.bottom
                 left: parent.left
                 right: parent.right
-                margins: 5
+                bottom: buttonContainer.top
+                bottomMargin: 10
             }
             height: 3
+            color: "silver"
         }
 
         Rectangle {
-            id: buttonsWrapper
-            height: buttonsContainer.height + (2* buttonsContainer.anchors.margins)
+            id: buttonContainer
             anchors {
-                top: genresBottomBorder.bottom
                 left: parent.left
                 right: parent.right
-                margins: 5
+                bottom: parent.bottom
             }
+            height: childrenRect.height
 
-            Rectangle {
-                id: buttonsContainer
-                height: playMediaButton.height + (2 * playMediaButton.anchors.margins)
+            Button {
+                id: playMediaButton
+                width: 400
+                height: 200
                 anchors {
-                    fill: parent
-                    left: parent.left
-                    right: parent.right
+                    horizontalCenter: parent.horizontalCenter
                 }
-
-                // FIXME this should be moved to a signal so that the main.qml can manage it?
-                Button {
-                    width: 400
-                    height: 200
-                    anchors.margins: 20
-                    anchors.verticalCenter: buttonsContainer.verticalCenter
-                    anchors.horizontalCenter: buttonsContainer.horizontalCenter
-                    id: playMediaButton
-                    text: qsTr("Play")
-                    iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_play.png"
-                    onClicked: playActivated()
-                }
+                text: qsTr("Play")
+                iconSource: "qrc:/mediabox/qml/images/xxhdpi/ic_action_play.png"
+                onClicked: playActivated()
             }
         }
     }
@@ -416,7 +263,6 @@ Item {
         yearLabel.text = '(' + movie.release_date.substring(0,4) + ')';
 
         artwork.imageSource = "http://" + main.mediaboxHost + ":" + main.mediaboxPort + "/mediabox/movie/" + mediaId + "/backdrop";
-
         overviewLabel.text = movie.overview;
         genresLabel.text = movie.genreNames;
 
@@ -429,7 +275,7 @@ Item {
             }
             castValue += movie.credits.cast[i].name
         }
-        castLabel.text = castValue
+        castView.value = castValue
 
         var directorValue = ""
         var crew
@@ -442,7 +288,7 @@ Item {
                 directorValue += crew.name
             }
         }
-        directorLabel.text = directorValue
+        crewView.value = directorValue
 
         runtimeLabel.text = movie.runtime + qsTr("m");
     }

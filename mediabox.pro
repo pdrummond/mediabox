@@ -18,6 +18,7 @@ SOURCES +=                                             \
 
 APP_FILES +=                                           \
     $$PWD/qml/main.qml                                 \
+    $$PWD/qml/components/LabelValueButton.qml          \
     $$PWD/qml/components/LineBorderedImage.qml         \
     $$PWD/qml/components/PersonView.qml                \
     $$PWD/qml/components/StandardSlider.qml            \
