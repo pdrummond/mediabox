@@ -11,7 +11,7 @@ Rectangle {
     property alias gradientStart: gradientStart.color
     property alias gradientStop: gradientStop.color
 
-    signal itemClicked()
+    signal itemClicked
 
     Layout.fillHeight: true
     Layout.fillWidth: true
