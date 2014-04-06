@@ -6,6 +6,7 @@
 #include "networkdiscovery.h"
 
 static const char* qmlComponents[] = {
+    "LabelValueButton",
     "LineBorderedImage",
     "PersonView",
     "StandardSlider",
